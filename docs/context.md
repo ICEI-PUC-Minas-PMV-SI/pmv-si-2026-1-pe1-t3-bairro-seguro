@@ -1,54 +1,46 @@
 # Introdução
 
-Imagine que você deseja apresentar este projeto para investidores que deverão decidir se investem ou não no desenvolvimento da sua ferramenta.
+A comunicação entre moradores é um fator importante para a organização e segurança de um bairro. Informações relevantes, como ocorrências de furtos, movimentações suspeitas, obras públicas ou avisos importantes, muitas vezes circulam apenas de forma informal entre vizinhos ou em grupos de redes sociais. No entanto, essas formas de comunicação nem sempre alcançam todos os moradores e frequentemente acabam se perdendo com o tempo.
 
-A **Introdução** consiste das etapas: *Contextualização -- Definição do problema -- Definição dos Objetivos -- Justificativa*, e tem como função situar o seu trabalho dentro de um contexto de mercado e mostrar a importância da sua proposta para resolver a dor de um usuário.
+Diante disso, a criação de um ambiente digital específico para a comunidade pode facilitar o compartilhamento e a consulta dessas informações. Um site voltado para notícias e alertas do bairro pode funcionar como um espaço onde moradores publicam e acompanham acontecimentos locais de forma organizada.
 
-A Contextualização deve situar sem projeto em um determinado contexto de mercado, a fim de fornecer informações adicionais que possam ajudar a entender melhor o assunto que você irá abordar. Serve também para definir a relevância do seu assunto, uma vez que mostra o tamanho do mercado em que se está inserido. Ela pode envolver a análise de vários aspectos, como o ambiente histórico, cultural, político e social em que o problema a ser atacado surgiu.
+Nesse contexto, este projeto propõe o desenvolvimento de um portal comunitário online voltado à divulgação de informações relevantes para os moradores do bairro, reunindo alertas de segurança, avisos sobre obras públicas, melhorias urbanas e outras notícias de interesse coletivo.
 
-Escreva de 2 a 3 parágrafos para contetualizar o seu projeto.
 
 ## Problema
 
-Nesse momento você deve apresentar o problema que a sua aplicação deve resolver. No entanto, **não** é a hora de comentar sobre a solução/aplicação.
+Atualmente, muitas comunidades não possuem um meio organizado e centralizado para compartilhar informações sobre acontecimentos do bairro. A comunicação geralmente ocorre por meio de grupos de mensagens ou redes sociais, onde as informações ficam dispersas, podem ser facilmente esquecidas e nem sempre chegam a todos os moradores.
 
-Descreva também o contexto em que essa aplicação será usada, se  houver: empresa, tecnologias, etc. Novamente, descreva apenas o que de fato existir, pois ainda não é a hora de apresentar requisitos detalhados ou projetos.
+Além de questões relacionadas à segurança, avisos importantes como obras da prefeitura, interdições de ruas, manutenção de serviços públicos ou eventos locais muitas vezes não são divulgados de forma clara para toda a comunidade. Isso pode gerar falta de informação, transtornos no dia a dia e dificuldade de acompanhamento dessas atividades pelos moradores.
 
-Nesse momento, o grupo pode optar por fazer uso  de ferramentas como Design Thinking, que permite um olhar de ponta a ponta para o problema.
+Dessa forma, surge a necessidade de uma plataforma que permita o registro e a divulgação dessas informações de maneira mais estruturada, facilitando o acesso às notícias do bairro e melhorando a comunicação entre os moradores.
 
-> **Links Úteis**:
-> - [Objetivos, Problema de pesquisa e Justificativa](https://medium.com/@versioparole/objetivos-problema-de-pesquisa-e-justificativa-c98c8233b9c3)
-> - [Matriz Certezas, Suposições e Dúvidas](https://medium.com/educa%C3%A7%C3%A3o-fora-da-caixa/matriz-certezas-suposi%C3%A7%C3%B5es-e-d%C3%BAvidas-fa2263633655)
-> - [Brainstorming](https://www.euax.com.br/2018/09/brainstorming/)
+
 
 ## Objetivos
 
-Aqui você deve descrever os objetivos do trabalho indicando que o objetivo geral é desenvolver um software para solucionar o problema apresentado acima. 
+Objetivo Geral:
+Desenvolver uma aplicação web que permita o compartilhamento de informações e ocorrências entre moradores de um bairro, facilitando a comunicação e o acesso a notícias locais.
+Objetivos Específicos:
+•	Permitir que usuários realizem cadastro e login na aplicação;
+•	Desenvolver um sistema de publicação de ocorrências;
+•	Organizar as postagens por categorias para evitar desorganização;
+•	Exibir as informações em formato de feed para fácil visualização;
+•	Possibilitar a inclusão de localização nas postagens;
+•	Permitir interação entre usuários por meio de comentários;
+•	Representar ocorrências em um mapa para melhor visualização.
 
-Apresente também alguns (pelo menos 2) objetivos específicos dependendo de onde você vai querer concentrar a sua prática investigativa, ou como você vai aprofundar no seu trabalho.
- 
-> **Links Úteis**:
-> - [Objetivo geral e objetivo específico: como fazer e quais verbos utilizar](https://blog.mettzer.com/diferenca-entre-objetivo-geral-e-objetivo-especifico/)
 
 ## Justificativa
 
-Descreva a importância ou a motivação para trabalhar com esta aplicação que você escolheu. Indique as razões pelas quais você escolheu seus objetivos específicos ou as razões para aprofundar em certos aspectos do software.
+Atualmente, a comunicação entre moradores de um mesmo bairro ocorre, em grande parte, por meio de redes sociais e aplicativos de mensagens. Apesar de serem ferramentas acessíveis, essas plataformas não são organizadas para esse tipo de uso, fazendo com que muitas informações importantes se percam ou não cheguem a todos os moradores.
 
-Lembre-se de pesquisar e utilizar números que justifiquem por que é importante que tal problema seja resolvido ou que mostrem o impacto do problema na vida das pessoas.
+De acordo com dados do CGI.br (Comitê Gestor da Internet no Brasil), o uso da internet para comunicação entre pessoas tem crescido constantemente no país, o que mostra que soluções digitais são cada vez mais presentes no dia a dia da população. Ainda há uma falta de ferramentas específicas voltadas para a organização de informações locais, como ocorrências, avisos e notícias de bairro.
 
-O grupo de trabalho pode fazer uso de questionários, entrevistas e dados estatísticos, que podem ser apresentados, com o objetivo de esclarecer detalhes do problema que será abordado pelo grupo.
+Diante disso, o desenvolvimento de um portal comunitário se justifica por facilitar o acesso à informação, melhorar a comunicação entre moradores e contribuir para uma maior organização das informações do bairro.
+O projeto também permite aplicar na prática os conhecimentos adquiridos durante o curso, contribuindo para a formação acadêmica dos alunos.
 
-> **Links Úteis**:
-> - [Como montar a justificativa](https://guiadamonografia.com.br/como-montar-justificativa-do-tcc/)
 
 ## Público-Alvo
 
-Descreva quem serão as pessoas que usarão a sua aplicação indicando os diferentes perfis. O objetivo aqui não é definir quem serão os clientes ou quais serão os papéis dos usuários na aplicação. A ideia é, dentro do possível, conhecer um pouco mais sobre o perfil dos usuários: conhecimentos prévios, relação com a tecnologia, relações hierárquicas, etc.
-
-Adicione informações sobre o público-alvo por meio de uma descrição textual, diagramas de personas e mapa de stakeholders.
-
-> **Links Úteis**:
-> - [Público-alvo](https://blog.hotmart.com/pt-br/publico-alvo/)
-> - [Como definir o público alvo](https://exame.com/pme/5-dicas-essenciais-para-definir-o-publico-alvo-do-seu-negocio/)
-> - [Público-alvo: o que é, tipos, como definir seu público e exemplos](https://klickpages.com.br/blog/publico-alvo-o-que-e/)
-> - [Qual a diferença entre público-alvo e persona?](https://rockcontent.com/blog/diferenca-publico-alvo-e-persona/)
+O público-alvo do projeto são moradores de bairros urbanos que utilizam a internet e possuem acesso a dispositivos como celulares ou computadores. Esses usuários buscam se manter informados sobre ocorrências, avisos e notícias locais. Para melhor compreensão das necessidades desse público, foram consideradas observações do dia a dia, além de conversas informais com pessoas que utilizam aplicativos de comunicação. A partir disso, foi possível identificar dificuldades na organização das informações e na comunicação entre moradores.Dessa forma, o sistema proposto busca atender usuários com conhecimentos básicos em tecnologia, priorizando uma interface simples, intuitiva e de fácil utilização.
