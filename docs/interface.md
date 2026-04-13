@@ -7,7 +7,7 @@ Visão geral da interação do usuário pelas telas do sistema e protótipo inte
 
 ## User Flow
 
-<img src="docs/img/SiteMaps.png">
+<img src="C:\Users\ferna\Documents\GitHub\BairroSeguro\puc\pmv-si-2026-1-pe1-t3-bairro-seguro\docs\img">
 
 
 
