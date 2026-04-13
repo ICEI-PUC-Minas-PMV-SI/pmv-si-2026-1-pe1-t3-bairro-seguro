@@ -7,7 +7,7 @@ Visão geral da interação do usuário pelas telas do sistema e protótipo inte
 
 ## User Flow
 
-![User Flow](img/userflow.png)
+![User Flow](img/SiteMaps.png)
 
 
 
