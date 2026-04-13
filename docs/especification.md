@@ -1,91 +1,65 @@
-# Especificações do Projeto
 
-Definição do problema e ideia de solução a partir da perspectiva do usuário. É composta pela definição do  diagrama de personas, histórias de usuários, requisitos funcionais e não funcionais além das restrições do projeto.
+Perfil 1: Morador (Usuário padrão)
+Descrição: 	Pessoa que reside no bairro ou que faz parte da comunidade e que faz o imput de dados no app. Esse usuário é quem presencia alguma ocorrência no bairro e a notifica no app para que outros usuários tenham acesso a ocorrência e consumam a informação.
+Necessidades: 	Uma interface que permite ver um feed de ocorrências e, que ao mesmo tempo, permita o usuário registrar uma ocorrência, fazendo uma publicação. Ao iniciar uma publicação, o usuário é obrigado a classificar a ocorrência em alguma categoria, adicionar uma rua, adicionar uma descrição, com a opção de adicionar ou não fotos e vídeos e transmitir rapidamente a outros usuários. 
 
-Apresente uma visão geral do que será abordado nesta parte do documento, enumerando as técnicas e/ou ferramentas utilizadas para realizar a especificações do projeto.
+Perfil 2: Moderador
+Descrição: 	Usuário capaz de apagar publicações realizadas e consultar dados de cadastro.
+Necessidades: 	Uma interface que permite apagar uma publicação e acessar dados cadastrais dos usuários (morador).
 
-Caso deseje atribuir uma imagem a sua persona, utilize o site https://thispersondoesnotexist.com/
 
-## Personas
-
-Pedro Paulo tem 26 anos, é arquiteto recém-formado e autônomo. Pensa em se desenvolver profissionalmente através de um mestrado fora do país, pois adora viajar, é solteiro e sempre quis fazer um intercâmbio. Está buscando uma agência que o ajude a encontrar universidades na Europa que aceitem alunos estrangeiros.
-
-Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
-
-> **Links Úteis**:
-> - [Rock Content](https://rockcontent.com/blog/personas/)
-> - [Hotmart](https://blog.hotmart.com/pt-br/como-criar-persona-negocio/)
-> - [O que é persona?](https://resultadosdigitais.com.br/blog/persona-o-que-e/)
-> - [Persona x Público-alvo](https://flammo.com.br/blog/persona-e-publico-alvo-qual-a-diferenca/)
-> - [Mapa de Empatia](https://resultadosdigitais.com.br/blog/mapa-da-empatia/)
-> - [Mapa de Stalkeholders](https://www.racecomunicacao.com.br/blog/como-fazer-o-mapeamento-de-stakeholders/)
->
-Lembre-se que você deve ser enumerar e descrever precisamente e personalizada todos os clientes ideais que sua solução almeja.
 
 ## Histórias de Usuários
 
-Com base na análise das personas forma identificadas as seguintes histórias de usuários:
+Eu como …
+[QUEM]	… quero/desejo … 
+[O QUE]	… para ....
+[PORQUE]
+Eu como morador	Desejo ter acesso a informações importantes sobre o bairro e que podem me afetar diretamente	Para que eu consiga decidir sobre qual atitude mais segura tomar imediatamente ou para que sirva para me planejar no futuro.
+Eu como morador	Quero conseguir postar um tipo ocorrência que presenciei no meu bairro.	Para que outros usuários tenham acesso, evitando o perigo ou fazendo a informação chegar nas pessoas responsáveis e que possam solucionar o problema.
+Eu como morador	Quero conseguir classificar a ocorrência como muito perigosa, perigo e atenção. 	Para que as pessoas consigam se posicionar de maneira contundente ao nível da ocorrência.
+Eu como morador	Quero conseguir postar fotos e vídeos.	Para que evidencie a ocorrência de maneira clara evitando más interpretações.
+Eu como morador	Quero conseguir adicionar informações nas postagens dos usuários por meio de comentários.	Para adicionar informações relevantes, atualizações ou fornecer ajuda sobre a ocorrência.
+Eu como moderador	Quero visualizar um painel com estatísticas de posts e denúncias	Para monitorar a saúde da comunidade.
+Eu como moderador	Quero banir usuários problemáticos por tempo determinado	Para prevenir reincidências.
+Eu como moderador	Quero deletar posts inapropriados com log de motivo	Para manter a plataforma segura.
+Eu como morador	Quero editar meu post até 1 hora após criação	Para corrigir erros
+Eu como morador	Quero denunciar posts ofensivos	Para ajudar na moderação
+Eu como moderador	Quero acessar dados cadastrais de usuários 	Para investigações.
 
-|EU COMO... `PERSONA`| QUERO/PRECISO ... `FUNCIONALIDADE` |PARA ... `MOTIVO/VALOR`                 |
-|--------------------|------------------------------------|----------------------------------------|
-|Usuário do sistema  | Registrar minhas tarefas           | Não esquecer de fazê-las               |
-|Administrador       | Alterar permissões                 | Permitir que possam administrar contas |
-
-Apresente aqui as histórias de usuário que são relevantes para o projeto de sua solução. As Histórias de Usuário consistem em uma ferramenta poderosa para a compreensão e elicitação dos requisitos funcionais e não funcionais da sua aplicação. Se possível, agrupe as histórias de usuário por contexto, para facilitar consultas recorrentes à essa parte do documento.
-
-> **Links Úteis**:
-> - [Histórias de usuários com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
-> - [Como escrever boas histórias de usuário (User Stories)](https://medium.com/vertice/como-escrever-boas-users-stories-hist%C3%B3rias-de-usu%C3%A1rios-b29c75043fac)
-> - [User Stories: requisitos que humanos entendem](https://www.luiztools.com.br/post/user-stories-descricao-de-requisitos-que-humanos-entendem/)
-> - [Histórias de Usuários: mais exemplos](https://www.reqview.com/doc/user-stories-example.html)
-> - [9 Common User Story Mistakes](https://airfocus.com/blog/user-story-mistakes/)
 
 ## Requisitos
 
-As tabelas que se seguem apresentam os requisitos funcionais e não funcionais que detalham o escopo do projeto.
+ID	Descrição	Prioridade
+RF- 01	O sistema deve obrigar o usuário a se cadastrar para acessar o app.	Alta
+RF- 02	O sistema deve apresentar um feed principal com as postagens de todos os usuários do bairro, ordenadas de forma cronológica (das mais recentes para as mais antigas).	Alta
+RF- 03	O sistema deve apresentar um mapa apontando as ruas que houveram ocorrência.	Alta
+RF- 04	O sistema deve permitir que o usuário crie uma publicação de ocorrência.	Alta
+RF- 05	O sistema deve obrigar o usuário a selecionar uma "tag" ou categoria (ex: Buraco, Pessoa Suspeita, Animal Perdido) ao criar uma postagem.	Alta
+RF- 06	O sistema deve permitir adicionar a localização.	Alta
+RF- 07	O sistema deve permitir uma marcação sobre a gravidade da ocorrência	Alta
+RF-08	O sistema deve permitir o upload e a visualização de arquivos de mídia (fotos e vídeos) associados a uma postagem.	Alta
+RF-09	O sistema deve permitir que os usuários insiram comentários de texto nas suas próprias postagens e nas postagens de terceiros.	Alta
+RF-10	O sistema deve exibir os comentários agrupados e vinculados à postagem original correspondente.	Média
+RF-11	O sistema deve permitir edição de posts pelo autor até 1 hora após criação.	Alta
+RF-12	 O sistema deve permitir deleção de posts pelo autor	Alta
+RF-13 	O sistema deve permitir filtrar posts por categoria e gravidade	Alta
+RF-14	 O sistema deve obrigar descrição ≥20 caracteres em posts	Alta
+RF-15	O sistema deve permitir denúncia de posts/comentários com motivo	Alta
+RF-16	O sistema deve validar campos obrigatórios no cadastro (email único, senha forte)	Alta
+RF-17	 O sistema deve fornecer painel de moderação para deletar posts e banir usuários	Alta
+RF-18	O sistema deve registrar logs de ações de moderação	Alta
 
-### Requisitos Funcionais
-
-|ID    | Descrição do Requisito  | Prioridade | 
-|------|-----------------------------------------|----| 
-|RF-001| A aplicação deve permitir que o usuário gerencie suas tarefas | ALTA |  
-|RF-002| A aplicação deve permitir a emissão de um relatório de tarefas realizadas no mês   | MÉDIA | 
 
 
 ### Requisitos não Funcionais
 
-|ID     | Descrição do Requisito  |Prioridade |
-|-------|-------------------------|----|
-|RNF-001| A aplicação deve ser responsiva | MÉDIA | 
-|RNF-002| A aplicação deve processar requisições do usuário em no máximo 3s |  BAIXA | 
-
-Com base nas Histórias de Usuário, enumere os requisitos da sua solução. Classifique esses requisitos em dois grupos:
-
-- [Requisitos Funcionais
- (RF)](https://pt.wikipedia.org/wiki/Requisito_funcional):
- correspondem a uma funcionalidade que deve estar presente na
-  plataforma (ex: cadastro de usuário).
-- [Requisitos Não Funcionais
-  (RNF)](https://pt.wikipedia.org/wiki/Requisito_n%C3%A3o_funcional):
-  correspondem a uma característica técnica, seja de usabilidade,
-  desempenho, confiabilidade, segurança ou outro (ex: suporte a
-  dispositivos iOS e Android).
-Lembre-se que cada requisito deve corresponder à uma e somente uma
-característica alvo da sua solução. Além disso, certifique-se de que
-todos os aspectos capturados nas Histórias de Usuário foram cobertos.
-
-## Restrições
-
-O projeto está restrito pelos itens apresentados na tabela a seguir.
-
-|ID| Restrição                                             |
-|--|-------------------------------------------------------|
-|01| O projeto deverá ser entregue até o final do semestre |
-|02| Não pode ser desenvolvido um módulo de backend        |
+ID	Descrição	Prioridade
+RNF-01	A interface deve ser limpa e responsiva para o uso em sistemas android e no pc.	Alta
+RNF- 02	Os dados dos usuários devem ser armazenados no navegador do sistema operacional.	Alta
+RNF-03	O software deve ser capaz de carregar todas as informações sem ultrapassar 3s.	Média
+RNF-04	O projeto deve ser desenvolvido utilizando HTML, CSS e JAVAScript.	Alta
+RNF-05	O sistema envia notificações de ocorrências registradas para os usuários.	Média
 
 
-Enumere as restrições à sua solução. Lembre-se de que as restrições geralmente limitam a solução candidata.
 
-> **Links Úteis**:
-> - [O que são Requisitos Funcionais e Requisitos Não Funcionais?](https://codificar.com.br/requisitos-funcionais-nao-funcionais/)
-> - [O que são requisitos funcionais e requisitos não funcionais?](https://analisederequisitos.com.br/requisitos-funcionais-e-requisitos-nao-funcionais-o-que-sao/)
