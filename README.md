@@ -16,7 +16,7 @@ Nesse contexto, este projeto propõe o desenvolvimento de um portal comunitário
 ## Integrantes
 
 * Raphael Costa Marinho
-* 
+* Felipe Gama
 * Fernando Pomárico Barbosa Souza
 * Flavio Monteiro Pacheco
 * Bruno Eduardo Cordeiro Aguilar
