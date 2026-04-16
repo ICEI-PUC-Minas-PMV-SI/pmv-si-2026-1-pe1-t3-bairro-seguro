@@ -1,9 +1,8 @@
 
 # Projeto de Interface
 
-Visão geral da interação do usuário pelas telas do sistema e protótipo interativo das telas com as funcionalidades que fazem parte do sistema (wireframes).
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/198900c5-5408-4f04-bf6f-c845e6fd590f" />
 
- Apresente as principais interfaces da plataforma. Discuta como ela foi elaborada de forma a atender os requisitos funcionais, não funcionais e histórias de usuário abordados nas <a href="2-Especificação do Projeto.md"> Documentação de Especificação</a>.
 
 ## User Flow
 
