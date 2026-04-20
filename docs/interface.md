@@ -22,7 +22,14 @@
 7. Tela de configuração da plataforma.
 <img width="559" height="384" alt="image" src="https://github.com/user-attachments/assets/a33ceb94-3341-4f7e-b4be-f9e9a18931bc" />
 
+8. Tela de mapa com busca de bairro.
+<img width="535" height="365" alt="Captura de tela 2026-04-20 130310" src="https://github.com/user-attachments/assets/bdddf32b-c694-4045-b650-2d4bccfd68f1" />
+  
+9. Tela de configuração da plataforma (Idioma).
+<img width="537" height="361" alt="Captura de tela 2026-04-20 130935" src="https://github.com/user-attachments/assets/c1ded15b-19f1-4d61-af6a-cde2ec4eb851" />
 
+10. Tela de perfil do usuário (com ocorrências).
+<img width="538" height="364" alt="Captura de tela 2026-04-20 124714" src="https://github.com/user-attachments/assets/8497139a-6315-484f-94cf-e944963e6bf3" />
 
 
 
