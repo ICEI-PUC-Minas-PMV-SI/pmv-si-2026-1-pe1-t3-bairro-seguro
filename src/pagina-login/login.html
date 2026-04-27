@@ -18,12 +18,21 @@
       <form id="loginForm" class="form" novalidate>
         <div id="msg" class="msg" role="alert"></div>
 
-        <label class="field">
-          <input id="email_login" name="email" type="email" placeholder="E-mail" required>
+        <label class="field" for="email_login">
+          <span class="sr-only">E-mail</span>
+          <span class="field-control has-leading">
+            <span class="field-icon icon-mail" aria-hidden="true"></span>
+            <input id="email_login" name="email" type="email" placeholder="E-mail" required>
+          </span>
         </label>
 
-        <label class="field">
-          <input id="senha_login" name="senha" type="password" placeholder="Senha" required>
+        <label class="field" for="senha_login">
+          <span class="sr-only">Senha</span>
+          <span class="field-control has-leading has-trailing">
+            <span class="field-icon icon-lock" aria-hidden="true"></span>
+            <input id="senha_login" name="senha" type="password" placeholder="Senha" required>
+            <button class="field-toggle icon-eye-off" type="button" data-toggle-password="senha_login" aria-label="Mostrar ou ocultar senha"></button>
+          </span>
         </label>
 
         <div class="form-row">

@@ -2,6 +2,14 @@
   const form = document.getElementById("cadastroForm");
   const msg = document.getElementById("msg");
 
+  document.querySelectorAll("[data-toggle-password]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const inputId = button.dataset.togglePassword;
+      const input = document.getElementById(inputId);
+      input.type = input.type === "password" ? "text" : "password";
+    });
+  });
+
   form.addEventListener("submit", function (event) {
     event.preventDefault();
 

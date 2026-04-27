@@ -18,10 +18,36 @@
       <form id="cadastroForm" class="form" novalidate>
         <div id="msg" class="msg" role="alert"></div>
 
-        <label class="field" for="nome"><input id="nome" type="text" placeholder="Nome" required></label>
-        <label class="field" for="email"><input id="email" type="email" placeholder="E-mail" required></label>
-        <label class="field" for="senha"><input id="senha" type="password" placeholder="Senha" required></label>
-        <label class="field" for="confirmarSenha"><input id="confirmarSenha" type="password" placeholder="Confirmar senha" required></label>
+        <label class="field" for="nome">
+          <span class="sr-only">Nome</span>
+          <span class="field-control has-leading">
+            <span class="field-icon icon-user" aria-hidden="true"></span>
+            <input id="nome" type="text" placeholder="Nome" required>
+          </span>
+        </label>
+        <label class="field" for="email">
+          <span class="sr-only">E-mail</span>
+          <span class="field-control has-leading">
+            <span class="field-icon icon-mail" aria-hidden="true"></span>
+            <input id="email" type="email" placeholder="E-mail" required>
+          </span>
+        </label>
+        <label class="field" for="senha">
+          <span class="sr-only">Senha</span>
+          <span class="field-control has-leading has-trailing">
+            <span class="field-icon icon-lock" aria-hidden="true"></span>
+            <input id="senha" type="password" placeholder="Senha" required>
+            <button class="field-toggle icon-eye-off" type="button" data-toggle-password="senha" aria-label="Mostrar ou ocultar senha"></button>
+          </span>
+        </label>
+        <label class="field" for="confirmarSenha">
+          <span class="sr-only">Confirmar senha</span>
+          <span class="field-control has-leading has-trailing">
+            <span class="field-icon icon-lock" aria-hidden="true"></span>
+            <input id="confirmarSenha" type="password" placeholder="Confirmar senha" required>
+            <button class="field-toggle icon-eye-off" type="button" data-toggle-password="confirmarSenha" aria-label="Mostrar ou ocultar senha"></button>
+          </span>
+        </label>
 
         <p class="register-link">Ja tem uma conta? <a class="link" href="../pagina-login/login.html"><strong>Entrar</strong></a></p>
 
