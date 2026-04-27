@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Cadastro</title>
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="cadastro.css">
+</head>
+<body>
+  <main class="page-wrap larger">
+    <section class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <h1>Bairro Seguro</h1>
+    </section>
+
+    <section class="card">
+      <form id="cadastroForm" class="form" novalidate>
+        <div id="msg" class="msg" role="alert"></div>
+
+        <label class="field" for="nome"><input id="nome" type="text" placeholder="Nome" required></label>
+        <label class="field" for="email"><input id="email" type="email" placeholder="E-mail" required></label>
+        <label class="field" for="senha"><input id="senha" type="password" placeholder="Senha" required></label>
+        <label class="field" for="confirmarSenha"><input id="confirmarSenha" type="password" placeholder="Confirmar senha" required></label>
+
+        <p class="register-link">Ja tem uma conta? <a class="link" href="../pagina-login/login.html"><strong>Entrar</strong></a></p>
+
+        <button class="action" type="submit">Registrar</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../assets/utils.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

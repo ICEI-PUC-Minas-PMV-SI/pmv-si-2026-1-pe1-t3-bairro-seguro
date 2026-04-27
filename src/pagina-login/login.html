@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Entrar</title>
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="style-login.css">
+</head>
+<body>
+  <main class="page-wrap">
+    <section class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <h1>Bairro Seguro</h1>
+    </section>
+
+    <section class="card">
+      <form id="loginForm" class="form" novalidate>
+        <div id="msg" class="msg" role="alert"></div>
+
+        <label class="field">
+          <input id="email_login" name="email" type="email" placeholder="E-mail" required>
+        </label>
+
+        <label class="field">
+          <input id="senha_login" name="senha" type="password" placeholder="Senha" required>
+        </label>
+
+        <div class="form-row">
+          <a class="link" href="#">Esqueceu sua senha?</a>
+        </div>
+
+        <button class="action" type="submit">Entrar</button>
+
+        <p class="register-link">Ainda nao tem uma conta? <a class="link" href="../paginaCadastro/cadastre-se.html"><strong>Registrar</strong></a></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="../assets/utils.js"></script>
+  <script src="script-login.js"></script>
+</body>
+</html>
