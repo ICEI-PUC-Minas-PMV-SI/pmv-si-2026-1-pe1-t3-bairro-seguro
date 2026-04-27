@@ -1,0 +1,10 @@
+.page-wrap.larger {
+  width: min(92vw, 640px);
+}
+
+.register-link {
+  color: var(--muted);
+  text-align: center;
+  margin: 0;
+  font-size: 1.05rem;
+}

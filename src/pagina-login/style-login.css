@@ -1,0 +1,18 @@
+#loginForm {
+  gap: 16px;
+}
+
+.register-link {
+  color: var(--muted);
+  text-align: center;
+  margin: 6px 0 2px;
+  font-size: 1.05rem;
+}
+
+.form-row {
+  justify-content: flex-end;
+}
+
+.form-row .link {
+  font-size: 1.05rem;
+}
