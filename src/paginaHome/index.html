@@ -21,7 +21,7 @@
 
   <main class="layout">
     <section class="search-wrap">
-      <input id="buscaBairro" type="text" placeholder="Buscar bairro...">
+      <input id="buscaBairro" type="text" placeholder="Buscar bairro ou tipo de ocorrência...">
     </section>
 
     <section class="map-mock" aria-label="Mapa mockado do bairro">
@@ -29,21 +29,128 @@
       <div class="road road-a"></div>
       <div class="road road-b"></div>
       <div class="road road-c"></div>
-      <div class="pin" style="top: 28%; left: 22%;"></div>
-      <div class="pin" style="top: 47%; left: 58%;"></div>
-      <div class="pin" style="top: 66%; left: 40%;"></div>
+      <div id="mapPins"></div>
       <div class="mock-label">Mapa da comunidade (mock)</div>
     </section>
 
     <section class="occurrences">
-      <div class="occurrences-title">Ocorrencias</div>
+      <div class="occurrences-header">
+        <div class="occurrences-title">Ocorrências</div>
+        <div class="filtros">
+          <select id="filtroCat">
+            <option value="">Todas as categorias</option>
+            <option value="Furto/Roubo">Furto/Roubo</option>
+            <option value="Pessoa Suspeita">Pessoa Suspeita</option>
+            <option value="Buraco na Via">Buraco na Via</option>
+            <option value="Iluminação">Iluminação</option>
+            <option value="Animal Perdido">Animal Perdido</option>
+            <option value="Perturbação">Perturbação</option>
+            <option value="Outro">Outro</option>
+          </select>
+          <select id="filtroGrav">
+            <option value="">Todas as gravidades</option>
+            <option value="Atenção">Atenção</option>
+            <option value="Perigo">Perigo</option>
+            <option value="Muito Perigoso">Muito Perigoso</option>
+          </select>
+        </div>
+      </div>
       <ul id="listaOcorrencias"></ul>
     </section>
 
     <section class="actions">
-      <button type="button" id="relatarBtn">+ Reportar ocorrencia</button>
+      <button type="button" id="relatarBtn">+ Reportar ocorrência</button>
     </section>
   </main>
+
+  <!-- MODAL NOVA OCORRÊNCIA -->
+  <div id="modalOverlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+      <div class="modal-header">
+        <h2 id="modalTitulo">Nova Ocorrência</h2>
+        <button id="modalFechar" type="button" class="modal-close" aria-label="Fechar">✕</button>
+      </div>
+
+      <form id="ocorrenciaForm" class="modal-form" novalidate>
+        <div id="modalMsg" class="msg" role="alert"></div>
+
+        <!-- Categoria -->
+        <div class="modal-field">
+          <label for="categoria">Categoria <span class="obrig">*</span></label>
+          <select id="categoria" required>
+            <option value="">Selecione uma categoria</option>
+            <option value="Furto/Roubo">🔪 Furto/Roubo</option>
+            <option value="Pessoa Suspeita">👤 Pessoa Suspeita</option>
+            <option value="Buraco na Via">🕳️ Buraco na Via</option>
+            <option value="Iluminação">💡 Iluminação</option>
+            <option value="Animal Perdido">🐾 Animal Perdido</option>
+            <option value="Perturbação">🔊 Perturbação</option>
+            <option value="Outro">📌 Outro</option>
+          </select>
+        </div>
+
+        <!-- Gravidade -->
+        <div class="modal-field">
+          <label>Gravidade <span class="obrig">*</span></label>
+          <div class="gravidade-options">
+            <label class="grav-btn grav-atencao">
+              <input type="radio" name="gravidade" value="Atenção" required>
+              <span>⚠️ Atenção</span>
+            </label>
+            <label class="grav-btn grav-perigo">
+              <input type="radio" name="gravidade" value="Perigo">
+              <span>🚨 Perigo</span>
+            </label>
+            <label class="grav-btn grav-muito">
+              <input type="radio" name="gravidade" value="Muito Perigoso">
+              <span>🔴 Muito Perigoso</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Localização -->
+        <div class="modal-field">
+          <label for="localizacao">Localização (rua/referência) <span class="obrig">*</span></label>
+          <input id="localizacao" type="text" placeholder="Ex: Rua das Flores, próximo ao mercado" required>
+        </div>
+
+        <!-- Descrição -->
+        <div class="modal-field">
+          <label for="descricao">Descrição <span class="obrig">*</span> <span class="hint" id="charCount">0/20 caracteres mínimos</span></label>
+          <textarea id="descricao" rows="4" placeholder="Descreva o que aconteceu com detalhes..." required></textarea>
+        </div>
+
+        <!-- Foto (opcional) -->
+        <div class="modal-field">
+          <label for="foto">Foto (opcional)</label>
+          <div class="upload-area" id="uploadArea">
+            <input id="foto" type="file" accept="image/*" class="file-input">
+            <div class="upload-placeholder" id="uploadPlaceholder">
+              <span class="upload-icon">📷</span>
+              <span>Clique para adicionar uma foto</span>
+            </div>
+            <img id="previewFoto" class="foto-preview" alt="Prévia da foto" style="display:none">
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelarBtn" class="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-submit">Publicar ocorrência</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL VER OCORRÊNCIA -->
+  <div id="verModalOverlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal-box modal-box-ver" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h2 id="verTitulo">Ocorrência</h2>
+        <button id="verModalFechar" type="button" class="modal-close" aria-label="Fechar">✕</button>
+      </div>
+      <div id="verConteudo" class="ver-conteudo"></div>
+    </div>
+  </div>
 
   <script src="../assets/utils.js"></script>
   <script src="script.js"></script>
