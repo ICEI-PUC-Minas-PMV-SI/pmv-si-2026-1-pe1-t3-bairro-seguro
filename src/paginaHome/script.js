@@ -66,24 +66,37 @@
     globalThis.location.href = "../pagina-login/login.html";
   });
 
-  mapa.on("click", function (event) {
+  mapa.on("click", async function (event) {
+    const lat = event.latlng.lat;
+    const lng = event.latlng.lng;
+
+    showBuscaFeedback("Buscando endereço do ponto selecionado...", "");
+
+    const localResolvido = await buscarEnderecoPorCoordenada(lat, lng);
+
     selecionarLocal({
       origem: "mapa",
-      cep: "",
-      endereco: "Ponto selecionado no mapa",
-      bairro: "",
-      cidade: "",
-      estado: "",
-      lat: event.latlng.lat,
-      lng: event.latlng.lng
+      cep: localResolvido.cep,
+      endereco: localResolvido.endereco,
+      bairro: localResolvido.bairro,
+      cidade: localResolvido.cidade,
+      estado: localResolvido.estado,
+      lat: lat,
+      lng: lng
     });
 
-    mostrarEnderecoSelecionado("Ponto selecionado no mapa");
+    mostrarEnderecoSelecionado(localResolvido.rotuloEndereco);
     abrirFormularioRelato();
-    showBuscaFeedback("Ponto selecionado no mapa. Selecione o emoji e detalhe a ocorrência.", "success");
+
+    if (localResolvido.aproximado) {
+      showBuscaFeedback("Ponto selecionado com endereço aproximado. Você pode relatar normalmente.", "success");
+      return;
+    }
+
+    showBuscaFeedback("Endereço localizado no mapa. Selecione o emoji e detalhe a ocorrência.", "success");
   });
 
-  window.addEventListener("storage", function (event) {
+  globalThis.addEventListener("storage", function (event) {
     if (event.key === "ocorrencias") {
       ocorrencias = carregarOcorrenciasPersistidas();
       renderAll();
@@ -131,8 +144,10 @@
         const isAuthor = Boolean(item.emailAutor && user?.emailUser && item.emailAutor === user.emailUser);
         const cepLabel = item.cep ? 'CEP ' + escapeHtml(item.cep) : 'CEP não informado';
 
+        const ariaLabel = 'Centralizar no mapa: ' + (item.tipo || 'Ocorrência') + ' em ' + (item.endereco || 'endereço não informado');
+
         return (
-          '<li class="occurrence-card" data-id="' + item.id + '">' +
+          '<li class="occurrence-card" data-id="' + item.id + '" role="button" tabindex="0" aria-label="' + escapeHtml(ariaLabel) + '">' +
             '<div class="card-top">' +
               '<span class="card-emoji">' + escapeHtml(item.emoji) + '</span>' +
               '<span class="card-categoria">' + escapeHtml(item.tipo) + '</span>' +
@@ -160,6 +175,15 @@
           mapa.flyTo([item.lat, item.lng], 16);
           item.marker.openPopup();
         }
+      });
+
+      card.addEventListener("keydown", function (event) {
+        if (event.key !== "Enter" && event.key !== " ") {
+          return;
+        }
+
+        event.preventDefault();
+        card.click();
       });
     });
 
@@ -237,49 +261,62 @@
 
       const viaCepData = await viaCepResponse.json();
 
+      let dadosCep = viaCepData;
+      let origemConsultaCep = "viacep";
+
       if (viaCepData.erro) {
-        showBuscaFeedback("CEP não encontrado. Verifique e tente novamente.", "error");
-        return;
-      }
+        const fallbackCep = await buscarCepComFallback(cepDigits);
 
-      const endereco = montarEndereco(viaCepData);
-      const geocodeResponse = await fetch(
-        "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=br&q=" +
-          encodeURIComponent(endereco + ", Brasil"),
-        {
-          headers: {
-            Accept: "application/json"
-          }
+        if (!fallbackCep) {
+          showBuscaFeedback("CEP não encontrado nas bases consultadas. Confirme o número ou selecione no mapa.", "error");
+          return;
         }
-      );
 
-      if (!geocodeResponse.ok) {
-        throw new Error("Falha na geocodificação");
+        dadosCep = fallbackCep;
+        origemConsultaCep = "fallback";
       }
 
-      const geocodeData = await geocodeResponse.json();
+      const endereco = montarEndereco(dadosCep);
+      const geocodeInfo = await buscarCoordenadasPorCep(dadosCep, endereco);
 
-      if (!geocodeData.length) {
-        showBuscaFeedback("CEP encontrado, mas não foi possível localizar o ponto no mapa.", "error");
+      if (!geocodeInfo.ponto) {
+        showBuscaFeedback("CEP válido, mas não foi possível localizar o ponto no mapa agora. Tente novamente em instantes.", "error");
         return;
       }
 
-      const ponto = geocodeData[0];
+      const ponto = geocodeInfo.ponto;
+      const enderecoResolvido = endereco || extrairEnderecoExibicao(ponto) || "Endereço não identificado";
+      const bairro = dadosCep.bairro || (ponto.address && (ponto.address.suburb || ponto.address.neighbourhood)) || dadosCep.localidade || "";
+      const cidade = dadosCep.localidade || (ponto.address && (ponto.address.city || ponto.address.town || ponto.address.village)) || "";
+      const estado = dadosCep.uf || (ponto.address && String(ponto.address.state_code || "").toUpperCase()) || "";
+
       selecionarLocal({
         origem: "cep",
         cep: cep,
-        endereco: endereco,
-        bairro: viaCepData.bairro || viaCepData.localidade || "",
-        cidade: viaCepData.localidade || "",
-        estado: viaCepData.uf || "",
+        endereco: enderecoResolvido,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado,
         lat: Number(ponto.lat),
         lng: Number(ponto.lon)
       });
 
-      mostrarEnderecoSelecionado("CEP " + cep + " • " + endereco);
+      mostrarEnderecoSelecionado("CEP " + cep + " • " + enderecoResolvido);
       abrirFormularioRelato();
+
+      if (origemConsultaCep === "fallback") {
+        showBuscaFeedback("CEP localizado por base alternativa com posição aproximada. Selecione o emoji e detalhe a ocorrência.", "success");
+        return;
+      }
+
+      if (geocodeInfo.nivelFallback > 0) {
+        showBuscaFeedback("CEP localizado com ponto aproximado (" + geocodeInfo.descricaoNivel + "). Selecione o emoji e detalhe a ocorrência.", "success");
+        return;
+      }
+
       showBuscaFeedback("CEP localizado no mapa. Selecione o emoji e detalhe a ocorrência.", "success");
     } catch (error) {
+      console.error("Falha ao buscar CEP:", error);
       showBuscaFeedback("Erro ao consultar o CEP. Tente novamente.", "error");
     } finally {
       buscarCepBtn.disabled = false;
@@ -416,7 +453,9 @@
     const seen = new Set();
 
     return lista
-      .map(normalizeOcorrencia)
+      .map(function (item) {
+        return normalizeOcorrencia(item);
+      })
       .filter(function (item) {
         if (!item || seen.has(item.id)) {
           return false;
@@ -445,6 +484,236 @@
       .filter(Boolean);
 
     return partes.join(", ");
+  }
+
+  async function buscarCoordenadasPorCep(viaCepData, enderecoCompleto) {
+    const lat = Number(viaCepData.lat);
+    const lng = Number(viaCepData.lng);
+
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      return {
+        ponto: {
+          lat: lat,
+          lon: lng,
+          address: {
+            city: viaCepData.localidade || "",
+            state_code: viaCepData.uf || ""
+          }
+        },
+        nivelFallback: 2,
+        descricaoNivel: "cidade/UF"
+      };
+    }
+
+    const consultas = criarConsultasGeocodificacao(viaCepData, enderecoCompleto);
+
+    for (let i = 0; i < consultas.length; i += 1) {
+      const consulta = consultas[i];
+      const ponto = await geocodificarEndereco(consulta);
+
+      if (ponto) {
+        return {
+          ponto: ponto,
+          nivelFallback: i,
+          descricaoNivel: consulta.nivel
+        };
+      }
+    }
+
+    return {
+      ponto: null,
+      nivelFallback: consultas.length,
+      descricaoNivel: "sem resultado"
+    };
+  }
+
+  function criarConsultasGeocodificacao(viaCepData, enderecoCompleto) {
+    const candidatos = [
+      {
+        texto: enderecoCompleto,
+        nivel: "endereço completo"
+      },
+      {
+        texto: [viaCepData.bairro, viaCepData.localidade, viaCepData.uf].filter(Boolean).join(", "),
+        nivel: "bairro/cidade/UF"
+      },
+      {
+        texto: [viaCepData.localidade, viaCepData.uf].filter(Boolean).join(", "),
+        nivel: "cidade/UF"
+      },
+      {
+        texto: String(viaCepData.uf || "").trim(),
+        nivel: "UF"
+      }
+    ];
+
+    const vistos = new Set();
+
+    return candidatos.filter(function (item) {
+      const texto = String(item.texto || "").trim();
+
+      if (!texto) {
+        return false;
+      }
+
+      const chave = texto.toLowerCase();
+      if (vistos.has(chave)) {
+        return false;
+      }
+
+      vistos.add(chave);
+      item.texto = texto;
+      return true;
+    });
+  }
+
+  async function buscarCepComFallback(cepDigits) {
+    const exato = await consultarAwesomeCep(cepDigits);
+    if (exato) {
+      return exato;
+    }
+
+    const cepBase = cepDigits.slice(0, 5) + "000";
+    if (cepBase === cepDigits) {
+      return null;
+    }
+
+    return consultarAwesomeCep(cepBase);
+  }
+
+  async function consultarAwesomeCep(cepDigits) {
+    try {
+      const response = await fetch("https://cep.awesomeapi.com.br/json/" + cepDigits, {
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const data = await response.json();
+      if (!data?.city || !data?.state) {
+        return null;
+      }
+
+      return {
+        cep: normalizeCepFromApi(data.cep || cepDigits),
+        logradouro: data.address || "",
+        bairro: data.district || "",
+        localidade: data.city || "",
+        uf: data.state || "",
+        lat: Number(data.lat),
+        lng: Number(data.lng)
+      };
+    } catch (error) {
+      console.error("Falha ao consultar AwesomeAPI:", error);
+      return null;
+    }
+  }
+
+  async function geocodificarEndereco(consulta) {
+    const geocodeResponse = await fetch(
+      "https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=1&countrycodes=br&q=" +
+        encodeURIComponent(consulta.texto + ", Brasil"),
+      {
+        headers: {
+          Accept: "application/json"
+        }
+      }
+    );
+
+    if (!geocodeResponse.ok) {
+      return null;
+    }
+
+    const geocodeData = await geocodeResponse.json();
+    return geocodeData.length ? geocodeData[0] : null;
+  }
+
+  async function buscarEnderecoPorCoordenada(lat, lng) {
+    try {
+      const response = await fetch(
+        "https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&zoom=18&lat=" +
+          encodeURIComponent(String(lat)) +
+          "&lon=" +
+          encodeURIComponent(String(lng)),
+        {
+          headers: {
+            Accept: "application/json"
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Falha na geocodificação reversa");
+      }
+
+      const data = await response.json();
+      const address = data.address || {};
+      const cep = normalizeCepFromApi(address.postcode);
+      const cidade = String(address.city || address.town || address.village || address.municipality || "").trim();
+      const estado = String(address.state_code || "").trim().toUpperCase();
+      const bairro = String(address.suburb || address.neighbourhood || address.city_district || cidade || "").trim();
+      const endereco = extrairEnderecoExibicao(data);
+      const labelCep = cep ? "CEP " + cep + " • " : "";
+
+      return {
+        cep: cep,
+        endereco: endereco,
+        bairro: bairro,
+        cidade: cidade,
+        estado: estado,
+        rotuloEndereco: labelCep + endereco,
+        aproximado: false
+      };
+    } catch (error) {
+      console.error("Falha ao buscar endereço por coordenada:", error);
+      return {
+        cep: "",
+        endereco: "Ponto selecionado no mapa",
+        bairro: "",
+        cidade: "",
+        estado: "",
+        rotuloEndereco: "Ponto selecionado no mapa",
+        aproximado: true
+      };
+    }
+  }
+
+  function extrairEnderecoExibicao(resultado) {
+    if (!resultado || typeof resultado !== "object") {
+      return "";
+    }
+
+    const address = resultado.address || {};
+    const rua = String(address.road || address.pedestrian || address.footway || "").trim();
+    const numero = String(address.house_number || "").trim();
+    const bairro = String(address.suburb || address.neighbourhood || address.city_district || "").trim();
+    const cidade = String(address.city || address.town || address.village || address.municipality || "").trim();
+    const estado = String(address.state_code || "").trim().toUpperCase();
+
+    const partes = [
+      [rua, numero].filter(Boolean).join(", "),
+      bairro,
+      [cidade, estado].filter(Boolean).join("/")
+    ].filter(Boolean);
+
+    if (partes.length) {
+      return partes.join(" - ");
+    }
+
+    return String(resultado.display_name || "").trim() || "Ponto selecionado no mapa";
+  }
+
+  function normalizeCepFromApi(value) {
+    const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+    if (digits.length !== 8) {
+      return "";
+    }
+
+    return digits.slice(0, 5) + "-" + digits.slice(5);
   }
 
   function formatarData(iso) {
@@ -481,10 +750,10 @@
 
   function escapeHtml(str) {
     return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 })();

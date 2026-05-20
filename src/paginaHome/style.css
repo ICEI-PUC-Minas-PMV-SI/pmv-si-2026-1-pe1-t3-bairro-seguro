@@ -102,12 +102,13 @@ body {
 }
 
 .occurrences-title {
-  padding: 8px 20px;
-  border-radius: 12px;
-  background: rgba(15, 53, 30, 0.8);
-  font-size: 1.6rem;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #e8eef7;
+  font-size: 1.45rem;
   font-weight: 700;
-  width: fit-content;
+  width: auto;
 }
 
 #listaOcorrencias {
@@ -119,19 +120,24 @@ body {
 }
 
 .occurrence-card {
-  background: rgba(23, 29, 53, 0.9);
+  background: rgba(23, 29, 53, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 16px 18px;
   display: grid;
   gap: 8px;
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.15s;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .occurrence-card:hover {
-  border-color: rgba(71, 198, 97, 0.4);
-  transform: translateY(-2px);
+  border-color: rgba(71, 198, 97, 0.28);
+  background: rgba(23, 29, 53, 0.92);
+}
+
+.occurrence-card:focus-visible {
+  outline: 2px solid #47c661;
+  outline-offset: 2px;
 }
 
 .card-top,
