@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="styles.css">
+<title>Perfil - Bairro Seguro</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- ICONS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<div class="logo">
+    <h1>Bairro<br>Seguro</h1>
+</div>
+
+<nav>
+    <i class="fa-solid fa-house"></i>
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-regular fa-user"></i>
+    <i class="fa-regular fa-map"></i>
+    <i class="fa-regular fa-bell"></i>
+</nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+<!-- HEADER -->
+<header class="topbar">
+    <div class="menu-links">
+    <a href="#">Sobre</a>
+    <a href="#">Como funciona</a>
+    </div>
+
+    <div class="top-actions">
+    <button class="login-btn">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Sarah Oliveira
+    </button>
+
+    <i class="fa-solid fa-gear settings"></i>
+    </div>
+</header>
+
+<!-- PROFILE -->
+<section class="profile">
+
+    <img src="img/perfil.jpg" class="profile-img">
+
+    <div class="verified">
+    <i class="fa-solid fa-check"></i>
+    <span>23</span>
+    </div>
+
+    <h2>Sarah Oliveira</h2>
+
+    <div class="badge">
+    Morador
+    </div>
+
+    <p class="location">
+    Belvedere, Belo Horizonte - MG, Brasil
+    </p>
+
+</section>
+
+<!-- REPORTS -->
+<section class="reports" id="reports">
+
+    <div class="report danger">
+    <div>
+        <h4>Assalto/roubo</h4>
+        <p>Praça Lagoa Seca</p>
+    </div>
+
+    <div class="time">
+        <span>21:30</span>
+        <small>02/03/2026</small>
+    </div>
+    </div>
+
+    <div class="report warning">
+    <div>
+        <h4>Vandalismo</h4>
+        <p>Rua Paisagem</p>
+    </div>
+
+    <div class="time">
+        <span>23:40</span>
+        <small>12/02/2026</small>
+    </div>
+    </div>
+
+</section>
+
+<!-- BUTTON -->
+<div class="button-area">
+    <button class="report-btn">
+    <i class="fa-solid fa-plus"></i>
+    Reportar ocorrência
+    </button>
+</div>
+
+</main>
+
+</div>
+<!-- MODAL -->
+<div class="modal" id="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Nova ocorrência</h2>
+
+            <button class="close-modal" id="fecharBtn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+
+         <input type="text" id="tipoInput" placeholder="Tipo da ocorrência">
+
+<input type="text" id="localInput" placeholder="Local">
+
+<textarea id="descricaoInput" placeholder="Descrição"></textarea>
+
+<button class="send-btn" id="enviarBtn">
+    <i class="fa-solid fa-paper-plane"></i>
+    Enviar ocorrência
+</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="success-message" id="successMessage">
+    Ocorrência enviada com sucesso
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
