@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Home</title>
+  <!-- Ícones FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="figma-layout">
+
+  <!-- ── SIDEBAR LATERAL ──────────────────────── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-text">Bairro<br>Seguro</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" title="Home"><i class="fa-solid fa-house"></i></a>
+      <a href="#" class="nav-item" title="Busca"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="#" class="nav-item" title="Perfil"><i class="fa-solid fa-user"></i></a>
+      <a href="#" class="nav-item" title="Mapa"><i class="fa-solid fa-map"></i></a>
+      <a href="#" class="nav-item" title="Alertas"><i class="fa-solid fa-bell"></i></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-avatar-placeholder"></div>
+    </div>
+  </aside>
+
+  <!-- ── CONTEÚDO PRINCIPAL ───────────────────── -->
+  <div class="main-container">
+    
+    <!-- NAVBAR SUPERIOR -->
+    <header class="navbar">
+      <div class="brand-header">
+        <span class="brand-icon"><i class="fa-solid fa-shield-halved"></i></span>
+        <span class="brand-name">Bairro Seguro</span>
+      </div>
+      <div class="navbar-links">
+        <span id="boasVindas" class="navbar-greeting">Olá, Bruno</span>
+      </div>
+      <div class="navbar-actions">
+        <button class="btn-login" id="sairBtn">Sair</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- BUSCA -->
+      <div class="search-section">
+        <div class="search-bar">
+          <input id="buscaBairro" type="text" placeholder="Buscar bairro, endereço ou tipo de ocorrência...">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+      </div>
+
+      <!-- MAPA -->
+      <section class="map-container">
+        <div class="map-mock" id="mapaBairro">
+          <div class="map-grid"></div>
+          <div id="mapPins"></div>
+          <div class="map-info">Busque um CEP, clique no mapa e use o emoji para registrar a ocorrência.</div>
+        </div>
+      </section>
+
+      <!-- BOTÃO OCORRÊNCIAS ANTIGAS -->
+      <div class="old-occurrences-button-container">
+        <button id="oldOccurrencesBtn" class="btn-old-occurrences">Ver Ocorrências Antigas</button>
+      </div>
+
+      <!-- BUSCA POR CEP -->
+      <section class="cep-search-section">
+        <div class="cep-search-container">
+          <input id="cepInput" type="text" placeholder="Digite o CEP no formato XXXXX-XXX" class="cep-input">
+          <button id="cepBtn" class="btn-cep">Buscar CEP</button>
+        </div>
+      </section>
+
+      <!-- BOTÃO REPORTAR (O QUE O GRUPO QUER VER) -->
+      <div class="floating-action-container">
+        <button id="relatarBtn" class="btn-report-main">
+          <i class="fa-solid fa-plus"></i> Reportar ocorrencia
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL NOVA OCORRÊNCIA -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2>Relatar Ocorrência</h2>
+        <button id="modalFechar" class="modal-close">&times;</button>
+      </div>
+      <form id="ocorrenciaForm" class="modal-form">
+        <div id="modalMsg" class="msg"></div>
+        <div class="modal-field">
+          <label>Categoria</label>
+          <select id="categoria" required>
+            <option value="Assalto">Assalto</option>
+            <option value="Roubo">Roubo</option>
+            <option value="Vandalismo">Vandalismo</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label>Localização</label>
+          <input type="text" id="localizacao" required placeholder="Ex: Rua Principal, 123">
+        </div>
+        <div class="modal-field">
+          <label>Descrição (mín. 20 caracteres)</label>
+          <textarea id="descricao" required placeholder="Descreva o que aconteceu..."></textarea>
+          <span id="charCount" class="hint">0/20 caracteres</span>
+        </div>
+        <div class="modal-field">
+          <label>Gravidade</label>
+          <div class="gravidade-options">
+            <label class="grav-btn"><input type="radio" name="gravidade" value="Atenção" checked> <span>Atenção</span></label>
+            <label class="grav-btn"><input type="radio" name="gravidade" value="Perigo"> <span>Perigo</span></label>
+            <label class="grav-btn"><input type="radio" name="gravidade" value="Muito Perigoso"> <span>Muito Perigoso</span></label>
+          </div>
+        </div>
+        <div class="modal-field">
+          <label>Foto (Opcional)</label>
+          <input type="file" id="foto" accept="image/*">
+          <div id="uploadPlaceholder">Clique para selecionar foto</div>
+          <img id="previewFoto" style="display:none; width:100%; border-radius:10px; margin-top:10px;" alt="Pré-visualização da foto">
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelarBtn" class="btn-cancel">Cancelar</button>
+          <button type="submit" class="btn-submit">Publicar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL VER DETALHES -->
+  <div id="verModalOverlay" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="verTitulo">Detalhes da Ocorrência</h2>
+        <button id="verModalFechar" class="modal-close">&times;</button>
+      </div>
+      <div id="verConteudo"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../assets/utils.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
