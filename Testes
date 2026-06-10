@@ -1,0 +1,146 @@
+BAIRRO SEGURO
+Avaliação da Solução — Planos de Teste
+
+
+Plano de Testes de Software
+O plano de testes de software identifica os casos de teste a serem executados pela equipe, apontando as funcionalidades, as operações e os resultados esperados. Os testes abaixo cobrem os principais requisitos funcionais do Bairro Seguro, utilizando a técnica de Caixa Preta (verificação de entradas e saídas) e Caixa Branca (verificação de lógica interna) conforme descrito no material de apoio da disciplina.
+
+Tipos de Teste utilizados
+Caixa Preta (Black-box): testa o comportamento externo da funcionalidade — a entrada fornecida e o resultado produzido — sem conhecimento da implementação interna. Aplicado nos casos de cadastro, login e registro de ocorrências.
+Caixa Branca (White-box): testa a lógica interna do código. Aplicado no caso de logout, verificando diretamente se as chaves do localStorage são removidas corretamente.
+
+Casos de Teste
+
+Caso de Teste: CT-01
+Funcionalidade	Cadastro de Usuário (RF-01, RF-16)
+Tipo de Teste	Caixa Preta — Caso Válido
+Pré-condição	Nenhum usuário cadastrado com o e-mail informado
+Passos	1. Acessar a página de cadastro 2. Preencher nome (≥4 caracteres), e-mail válido, senha (≥6 caracteres) e confirmação de senha 3. Clicar em Cadastrar
+Resultado Esperado	Usuário é salvo no localStorage; sessão iniciada; redirecionamento para a Home
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-02
+Funcionalidade	Cadastro de Usuário — Nome inválido (RF-16)
+Tipo de Teste	Caixa Preta — Caso de Erro
+Pré-condição	Página de cadastro aberta
+Passos	1. Preencher nome com menos de 4 caracteres (ex.: 'Ana') 2. Preencher demais campos corretamente 3. Clicar em Cadastrar
+Resultado Esperado	Mensagem de erro exibida: 'O nome precisa ter pelo menos 4 caracteres'. Formulário não é submetido.
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-03
+Funcionalidade	Cadastro de Usuário — E-mail inválido (RF-16)
+Tipo de Teste	Caixa Preta — Caso de Erro
+Pré-condição	Página de cadastro aberta
+Passos	1. Preencher e-mail sem '@' (ex.: 'emailinvalido.com') 2. Preencher demais campos corretamente 3. Clicar em Cadastrar
+Resultado Esperado	Mensagem de erro: 'Digite um e-mail válido'. Formulário não é submetido.
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-04
+Funcionalidade	Cadastro de Usuário — Senhas divergentes (RF-16)
+Tipo de Teste	Caixa Preta — Caso de Erro
+Pré-condição	Página de cadastro aberta
+Passos	1. Preencher campo 'Senha' com '123456' 2. Preencher campo 'Confirmar Senha' com '654321' 3. Clicar em Cadastrar
+Resultado Esperado	Mensagem de erro: 'As senhas não conferem'. Formulário não é submetido.
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-05
+Funcionalidade	Cadastro de Usuário — E-mail duplicado (RF-16)
+Tipo de Teste	Caixa Preta — Caso de Borda
+Pré-condição	Usuário com e-mail 'joao@email.com' já cadastrado
+Passos	1. Tentar cadastrar novo usuário com o mesmo e-mail 2. Preencher demais campos corretamente 3. Clicar em Cadastrar
+Resultado Esperado	Mensagem de erro: 'Este e-mail já está cadastrado'. Novo cadastro não é criado.
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-06
+Funcionalidade	Login — Credenciais corretas (RF-01)
+Tipo de Teste	Caixa Preta — Caso Válido
+Pré-condição	Usuário cadastrado com e-mail 'joao@email.com' e senha '123456'
+Passos	1. Acessar a página de login 2. Informar e-mail e senha corretos 3. Clicar em Entrar
+Resultado Esperado	Sessão iniciada (token salvo no localStorage); redirecionamento para a Home
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-07
+Funcionalidade	Login — Senha incorreta (RF-01)
+Tipo de Teste	Caixa Preta — Caso de Erro
+Pré-condição	Usuário cadastrado no sistema
+Passos	1. Informar e-mail correto e senha errada 2. Clicar em Entrar
+Resultado Esperado	Mensagem de erro: 'E-mail ou senha inválidos'. Sessão não é iniciada.
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-08
+Funcionalidade	Registro de Ocorrência — Dados válidos (RF-04, RF-05, RF-06)
+Tipo de Teste	Caixa Preta — Caso Válido
+Pré-condição	Usuário autenticado na aplicação
+Passos	1. Acessar o formulário de nova ocorrência 2. Selecionar categoria (ex.: 'Roubo') 3. Informar CEP ou selecionar ponto no mapa 4. Preencher descrição (≥20 caracteres) 5. Submeter o formulário
+Resultado Esperado	Ocorrência salva no localStorage; marcador exibido no mapa na localização informada
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-09
+Funcionalidade	Registro de Ocorrência — Sem categoria (RF-05)
+Tipo de Teste	Caixa Preta — Caso de Erro
+Pré-condição	Usuário autenticado; formulário de ocorrência aberto
+Passos	1. Deixar o campo de categoria em branco 2. Preencher demais campos corretamente 3. Tentar submeter
+Resultado Esperado	Formulário não é submetido; campo obrigatório destacado visualmente
+Resultado Obtido	A preencher após execução
+
+Caso de Teste: CT-10
+Funcionalidade	Logout (RF-01)
+Tipo de Teste	Caixa Branca — Fluxo de sessão
+Pré-condição	Usuário autenticado
+Passos	1. Clicar no botão 'Sair' 2. Verificar localStorage
+Resultado Esperado	Chaves 'userLogado' e 'token' removidas do localStorage; redirecionamento para a página de login
+Resultado Obtido	A preencher após execução
+
+ 
+Plano de Testes de Usabilidade
+O plano de testes de usabilidade identifica as operações que os usuários devem executar para avaliar se o sistema é fácil de usar. Conforme o material de apoio digital.gov, usabilidade mede com que facilidade o usuário consegue atingir seus objetivos ao usar o serviço. O teste é conduzido com um participante real: o avaliador solicita uma tarefa e apenas observa, sem dar dicas.
+
+Como conduzir o teste
+1. Selecione um participante que represente o público-alvo (morador, ≥18 anos, acesso básico à internet).
+2. Apresente o sistema sem explicar como ele funciona.
+3. Leia a tarefa em voz alta e peça ao participante que pense em voz alta enquanto executa.
+4. Não interfira. Apenas observe e anote dificuldades, erros e tempo gasto.
+5. Ao final, registre o resultado na coluna 'Resultado / Observações' de cada caso.
+
+Casos de Teste de Usabilidade
+
+Caso de Teste de Usabilidade: TU-01
+Objetivo	Verificar se o usuário consegue criar uma conta sem orientação
+Perfil do Participante	Morador, acima de 18 anos, familiarizado com uso de celular e e-mail
+Tarefa solicitada	'Você acabou de baixar o Bairro Seguro. Crie uma conta para começar a usar.'
+O que observar	O participante localiza o botão de cadastro? Entende quais campos são obrigatórios? Conclui sem ajuda? Comete erros? Em quais campos?
+Critério de sucesso	Cadastro concluído com sucesso em até 3 minutos, sem intervenção do avaliador
+Resultado / Observações	A preencher após a execução do teste.
+
+Caso de Teste de Usabilidade: TU-02
+Objetivo	Verificar se o fluxo de login é intuitivo
+Perfil do Participante	Morador já cadastrado no sistema
+Tarefa solicitada	'Você já tem uma conta. Faça login agora.'
+O que observar	O participante encontra a tela de login? Sabe onde digitar e-mail e senha? Identifica o botão de entrar?
+Critério de sucesso	Login realizado em até 1 minuto, sem erros e sem orientação
+Resultado / Observações	A preencher após a execução do teste.
+
+Caso de Teste de Usabilidade: TU-03
+Objetivo	Verificar se o usuário consegue registrar uma ocorrência no mapa
+Perfil do Participante	Morador autenticado, sem experiência prévia com o sistema
+Tarefa solicitada	'Você presenciou um roubo na sua rua. Registre essa ocorrência no aplicativo.'
+O que observar	O participante encontra o formulário? Consegue selecionar a categoria correta? Entende como informar a localização? Sabe como enviar?
+Critério de sucesso	Ocorrência registrada e marcador visível no mapa em até 4 minutos
+Resultado / Observações	A preencher após a execução do teste.
+
+Caso de Teste de Usabilidade: TU-04
+Objetivo	Verificar se o mapa é compreensível para o usuário
+Perfil do Participante	Morador autenticado, pode nunca ter usado mapas interativos
+Tarefa solicitada	'Verifique se há alguma ocorrência registrada perto da Praça da Liberdade.'
+O que observar	O participante entende como navegar no mapa? Consegue identificar os marcadores? Compreende o que cada ícone representa?
+Critério de sucesso	Participante localiza e descreve ao menos uma ocorrência no mapa em até 3 minutos
+Resultado / Observações	A preencher após a execução do teste.
+
+Caso de Teste de Usabilidade: TU-05
+Objetivo	Verificar se o usuário encontra e utiliza a área de perfil
+Perfil do Participante	Morador autenticado
+Tarefa solicitada	'Atualize seu número de telefone no seu perfil.'
+O que observar	O participante localiza a página de perfil? Sabe como editar o campo? Consegue salvar a alteração?
+Critério de sucesso	Telefone atualizado com sucesso em até 2 minutos, sem orientação do avaliador
+Resultado / Observações	A preencher após a execução do teste.
+
