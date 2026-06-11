@@ -332,3 +332,150 @@ body {
     height: 56vh;
   }
 }
+
+/* ── Botão Editar nos cards ─────────────────────────────────────────────── */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.card-edit {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #fff;
+  background: #2a5a8a;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.card-edit:hover {
+  background: #3570a8;
+}
+
+/* ── Modal de edição ────────────────────────────────────────────────────── */
+.edit-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.edit-modal-overlay.visible {
+  display: flex;
+}
+
+.edit-modal-box {
+  background: linear-gradient(180deg, #171c33 0%, #14192d 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px;
+  width: min(92vw, 480px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.edit-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.edit-modal-header h2 {
+  font-size: 1.2rem;
+  color: #f4f6ff;
+  margin: 0;
+}
+
+.edit-modal-close {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-form {
+  display: grid;
+  gap: 12px;
+}
+
+.edit-label {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  margin-bottom: -6px;
+}
+
+.edit-select,
+.edit-input,
+.edit-textarea {
+  width: 100%;
+  background: rgba(18, 30, 24, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #ebf4eb;
+  padding: 11px 13px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.edit-select { height: 48px; appearance: none; }
+.edit-textarea { resize: vertical; min-height: 90px; }
+
+.edit-select:focus,
+.edit-input:focus,
+.edit-textarea:focus {
+  outline: none;
+  border-color: #47c661;
+}
+
+.edit-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.edit-btn-save {
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f6fff6;
+  background: #235f3f;
+  cursor: pointer;
+}
+
+.edit-btn-save:hover { filter: brightness(1.1); }
+
+.edit-btn-cancel {
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  background: #7a4343;
+  cursor: pointer;
+}

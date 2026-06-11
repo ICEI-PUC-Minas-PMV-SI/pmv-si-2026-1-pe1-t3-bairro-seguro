@@ -1,0 +1,27 @@
+{
+  "name": "pmv-si-2026-1-pe1-t3-bairro-seguro",
+  "version": "1.0.0",
+  "description": "CURSO: Sistemas de Informação",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  }
+}

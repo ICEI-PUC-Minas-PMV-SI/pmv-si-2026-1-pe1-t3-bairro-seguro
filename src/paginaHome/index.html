@@ -69,8 +69,49 @@
     </section>
   </main>
 
+  <!-- Modal de edição -->
+  <div id="editModal" class="edit-modal-overlay" role="dialog" aria-modal="true" aria-label="Editar ocorrência">
+    <div class="edit-modal-box">
+      <div class="edit-modal-header">
+        <h2>Editar ocorrência</h2>
+        <button id="editModalClose" class="edit-modal-close" aria-label="Fechar">✕</button>
+      </div>
+      <form id="editForm" class="edit-form">
+        <input type="hidden" id="editId">
+
+        <label class="edit-label" for="editEmoji">Tipo de ocorrência</label>
+        <select id="editEmoji" class="edit-select">
+          <option value="">Selecione</option>
+          <option value="🚨">🚨 Assalto/roubo</option>
+          <option value="💡">💡 Iluminação apagada</option>
+          <option value="🔊">🔊 Som alto/barulho</option>
+          <option value="🚫">🚫 Vandalismo/dano</option>
+          <option value="⚠️">⚠️ Assédio</option>
+          <option value="📍">📍 Outro problema</option>
+        </select>
+
+        <label class="edit-label" for="editEndereco">Endereço</label>
+        <input id="editEndereco" class="edit-input" type="text" placeholder="Endereço da ocorrência">
+
+        <label class="edit-label" for="editDetalhe">Descrição</label>
+        <textarea id="editDetalhe" class="edit-textarea" rows="4" placeholder="Detalhe a ocorrência..."></textarea>
+
+        <div class="edit-actions">
+          <button type="submit" class="edit-btn-save">Salvar alterações</button>
+          <button type="button" id="editModalClose2" class="edit-btn-cancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../assets/utils.js"></script>
   <script src="script.js"></script>
+  <script>
+    // Segundo botão cancelar do modal
+    document.getElementById("editModalClose2").addEventListener("click", function () {
+      document.getElementById("editModal").classList.remove("visible");
+    });
+  </script>
 </body>
 </html>
