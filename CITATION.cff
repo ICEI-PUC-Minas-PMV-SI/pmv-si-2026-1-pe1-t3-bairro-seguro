@@ -27,12 +27,11 @@ authors:
 repository-code: >-
   https://github.com/ICEI-PUC-Minas-PMV-SI/WebApplicationProject-Template
 abstract: >-
-  Descrever resumidamente, em um ou dois parágrafos, o
-  projeto que foi desenvolvido.
+ Projeto desenvolvimento no primeiro semestre de sistemas de informação. O projeto se trata de um site construido em front end que se chama Bairro Seguro. O app permite adicionar ocorrencias de classes diferentes de problemas que ocorrem em seu bairro ou próximo. Conectando a população e aumentando o cuidado.
 keywords:
   - Desenvolvimento Web
   - HTML
   - CSS
   - JavaScript
   - Template
-date-released: '2024-06-23'
+date-released: '12-06-2026'
