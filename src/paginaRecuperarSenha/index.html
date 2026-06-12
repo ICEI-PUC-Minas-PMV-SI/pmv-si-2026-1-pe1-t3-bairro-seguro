@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Recuperar Senha</title>
+  <link rel="stylesheet" href="../assets/theme.css">
+  <style>
+    .step { display:none; }
+    .step.on { display:grid; gap:14px; }
+    .back { text-align:center; margin-top:6px; font-size:1rem; color:var(--muted); }
+    .back a { color:#129d30; }
+    .page-wrap { width:min(92vw,520px); margin:32px auto; }
+  </style>
+</head>
+<body>
+  <main class="page-wrap">
+    <section class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <h1>Bairro Seguro</h1>
+    </section>
+    <section class="card">
+      <!-- Passo 1 -->
+      <div id="p1" class="step on">
+        <div id="m1" class="msg"></div>
+        <p style="color:var(--muted);font-size:1rem;margin:0">Digite seu e-mail para recuperar o acesso.</p>
+        <label class="field" for="emailR">
+          <span class="sr-only">E-mail</span>
+          <span class="field-control has-leading">
+            <span class="field-icon icon-mail"></span>
+            <input id="emailR" type="email" placeholder="E-mail cadastrado" required>
+          </span>
+        </label>
+        <button class="action" type="button" id="btnP1" style="font-size:1.3rem">Continuar</button>
+        <p class="back">Lembrou? <a href="../pagina-login/login.html">Voltar ao login</a></p>
+      </div>
+      <!-- Passo 2 -->
+      <div id="p2" class="step">
+        <div id="m2" class="msg"></div>
+        <p style="color:var(--muted);font-size:1rem;margin:0">Responda a pergunta de segurança.</p>
+        <p id="txtPerg" style="color:var(--text);font-weight:600;font-size:1.05rem;margin:0"></p>
+        <label class="field" for="respR">
+          <span class="sr-only">Resposta</span>
+          <span class="field-control has-leading">
+            <span class="field-icon icon-lock"></span>
+            <input id="respR" type="text" placeholder="Sua resposta" required>
+          </span>
+        </label>
+        <button class="action" type="button" id="btnP2" style="font-size:1.3rem">Verificar</button>
+      </div>
+      <!-- Passo 3 -->
+      <div id="p3" class="step">
+        <div id="m3" class="msg"></div>
+        <p style="color:var(--muted);font-size:1rem;margin:0">Crie uma nova senha.</p>
+        <label class="field" for="novaSen">
+          <span class="sr-only">Nova senha</span>
+          <span class="field-control has-leading has-trailing">
+            <span class="field-icon icon-lock"></span>
+            <input id="novaSen" type="password" placeholder="Nova senha (mín. 6 caracteres)" required>
+            <button class="field-toggle icon-eye-off" type="button" data-toggle-password="novaSen"></button>
+          </span>
+        </label>
+        <label class="field" for="confSen">
+          <span class="sr-only">Confirmar</span>
+          <span class="field-control has-leading has-trailing">
+            <span class="field-icon icon-lock"></span>
+            <input id="confSen" type="password" placeholder="Confirmar nova senha" required>
+            <button class="field-toggle icon-eye-off" type="button" data-toggle-password="confSen"></button>
+          </span>
+        </label>
+        <button class="action" type="button" id="btnP3" style="font-size:1.3rem">Redefinir senha</button>
+      </div>
+    </section>
+  </main>
+  <script src="../assets/utils.js"></script>
+  <script>
+  (function(){
+    const PERGS = { nome_mae:"Qual o nome da sua mãe?", nome_pet:"Qual o nome do seu primeiro animal de estimação?", cidade_nasceu:"Em qual cidade você nasceu?", escola_primaria:"Qual o nome da sua escola primária?", time_coracao:"Qual o seu time do coração?" };
+    let emailAlvo="";
+
+    document.querySelectorAll("[data-toggle-password]").forEach(function(btn){
+      btn.addEventListener("click",function(){ const i=document.getElementById(btn.dataset.togglePassword); i.type=i.type==="password"?"text":"password"; });
+    });
+
+    function ir(n){ ["p1","p2","p3"].forEach(function(id){ document.getElementById(id).classList.remove("on"); }); document.getElementById("p"+n).classList.add("on"); }
+    function msg(n,t,k){ const e=document.getElementById("m"+n); e.textContent=t; e.className="msg "+k; }
+
+    document.getElementById("btnP1").addEventListener("click",function(){
+      const email=document.getElementById("emailR").value.trim().toLowerCase();
+      if(!email){ msg(1,"Digite seu e-mail.","error"); return; }
+      const lista=getListaUser();
+      const u=lista.find(function(x){ return x.emailUser.toLowerCase()===email; });
+      if(!u){ msg(1,"E-mail não encontrado.","error"); return; }
+      if(!u.perguntaSecreta||!u.respostaSecreta){ msg(1,"Esta conta não tem pergunta secreta cadastrada.","error"); return; }
+      emailAlvo=email;
+      document.getElementById("txtPerg").textContent=PERGS[u.perguntaSecreta]||u.perguntaSecreta;
+      ir(2);
+    });
+    document.getElementById("btnP2").addEventListener("click",function(){
+      const resp=document.getElementById("respR").value.trim().toLowerCase();
+      if(!resp){ msg(2,"Digite sua resposta.","error"); return; }
+      const u=getListaUser().find(function(x){ return x.emailUser.toLowerCase()===emailAlvo; });
+      if(!u||u.respostaSecreta.toLowerCase()!==resp){ msg(2,"Resposta incorreta.","error"); return; }
+      ir(3);
+    });
+    document.getElementById("btnP3").addEventListener("click",function(){
+      const nova=document.getElementById("novaSen").value;
+      const conf=document.getElementById("confSen").value;
+      if(nova.length<6){ msg(3,"Mínimo 6 caracteres.","error"); return; }
+      if(nova!==conf){   msg(3,"As senhas não conferem.","error"); return; }
+      const lista=getListaUser();
+      const idx=lista.findIndex(function(x){ return x.emailUser.toLowerCase()===emailAlvo; });
+      if(idx===-1){ msg(3,"Erro inesperado.","error"); return; }
+      lista[idx].senhaUser=nova;
+      saveListaUser(lista);
+      location.href="../pagina-login/login.html?sucesso=2";
+    });
+  })();
+  </script>
+</body>
+</html>

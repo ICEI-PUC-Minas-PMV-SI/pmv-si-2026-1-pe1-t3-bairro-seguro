@@ -8,6 +8,7 @@
   const form = document.getElementById("loginForm");
 
   const params = new URLSearchParams(globalThis.location.search);
+  if (params.get("banido") === "1") { showMessage("Sua conta foi banida. Entre em contato com um moderador.", "error"); }
   if (params.get("sucesso") === "1") {
     showMessage("Cadastro realizado com sucesso. Agora faca seu login.", "success");
   }

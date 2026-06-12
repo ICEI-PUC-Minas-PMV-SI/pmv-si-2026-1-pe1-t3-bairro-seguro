@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Configurações</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/sidebar.css">
+  <style>
+    [data-tema="claro"] { --bg:#f0f2f8; --panel:#fff; --text:#1a1d2e; --muted:#5a6080; --field:#e8eaf2; --field-text:#1a1d2e; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(14,18,37,0.95); }
+    .topbar h1 { margin:0; color:var(--brand); font-size:1.2rem; }
+    .content { max-width:620px; margin:0 auto; padding:24px 22px 40px; }
+    .stitle { font-size:0.78rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding:16px 0 8px; }
+    .cfg-row { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:15px 18px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); border-radius:12px; margin-bottom:8px; }
+    [data-tema="claro"] .cfg-row { background:rgba(0,0,0,0.03); border-color:rgba(0,0,0,0.08); }
+    .cfg-info { display:grid; gap:2px; }
+    .cfg-name { font-size:1rem; font-weight:600; color:var(--text); }
+    .cfg-desc { font-size:12px; color:var(--muted); }
+    /* Toggle */
+    .tg-in { display:none; }
+    .tg-lb { display:block; width:46px; height:25px; background:rgba(255,255,255,0.14); border-radius:999px; position:relative; cursor:pointer; transition:background .25s; flex-shrink:0; }
+    .tg-in:checked + .tg-lb { background:var(--brand); }
+    .tg-lb::after { content:""; position:absolute; top:3px; left:3px; width:19px; height:19px; border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 4px rgba(0,0,0,.3); }
+    .tg-in:checked + .tg-lb::after { left:24px; }
+    /* Botão danger */
+    .btn-danger { border:1px solid rgba(218,59,59,0.4); border-radius:10px; padding:10px 16px; font-size:0.9rem; font-weight:600; color:#ff8a8a; background:rgba(218,59,59,0.1); cursor:pointer; flex-shrink:0; transition:background .2s; font-family:inherit; }
+    .btn-danger:hover { background:rgba(218,59,59,0.22); }
+    /* Sobre */
+    .about { text-align:center; padding:18px 0 4px; color:var(--muted); font-size:12px; line-height:1.8; }
+    .team { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin-top:10px; }
+    .team span { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); border-radius:999px; padding:3px 11px; font-size:11px; color:var(--muted); }
+    [data-tema="claro"] .team span { background:rgba(0,0,0,0.05); border-color:rgba(0,0,0,0.1); }
+    .msg-c { border-radius:10px; padding:10px 13px; font-size:12px; margin-bottom:8px; display:none; }
+    .msg-c.success { display:block; background:#10551f; border:1px solid #2f9c47; color:#fff; }
+  </style>
+</head>
+<body class="app-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-mark" aria-hidden="true"></div></div>
+    <nav class="sidebar-nav">
+      <a href="../paginaHome/index.html" class="sidebar-item" data-page="paginaHome" title="Início">
+        <i class="fa-solid fa-house"></i><span>Início</span>
+      </a>
+      <a href="../pagina-perfil/index.html" class="sidebar-item" data-page="pagina-perfil" title="Perfil">
+        <span id="sidebarAvatar" style="font-size:20px;line-height:1">👤</span>
+        <span id="sidebarNome">Perfil</span>
+      </a>
+      <a href="../paginaConfiguracoes/index.html" class="sidebar-item ativo" data-page="paginaConfiguracoes" title="Configurações">
+        <i class="fa-solid fa-gear"></i><span>Config</span>
+      </a>
+      <a href="../paginaModerador/index.html" class="sidebar-item" data-page="paginaModerador" id="linkModerador" title="Moderação" style="display:none">
+        <i class="fa-solid fa-shield-halved"></i><span>Mod</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="sidebarLogout" title="Sair">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Sair</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="sidebar-content">
+    <header class="topbar"><h1>Configurações</h1></header>
+    <div class="content">
+      <div id="msgC" class="msg-c"></div>
+
+      <div class="stitle">Aparência</div>
+      <div class="cfg-row">
+        <div class="cfg-info">
+          <span class="cfg-name">🌙 Tema claro/escuro</span>
+          <span class="cfg-desc">Alterna entre tema escuro (padrão) e tema claro</span>
+        </div>
+        <div><input type="checkbox" class="tg-in" id="tgTema"><label class="tg-lb" for="tgTema"></label></div>
+      </div>
+
+      <div class="stitle">Notificações</div>
+      <div class="cfg-row">
+        <div class="cfg-info">
+          <span class="cfg-name">🔔 Notificações</span>
+          <span class="cfg-desc">Alertas de novas ocorrências na sua região</span>
+        </div>
+        <div><input type="checkbox" class="tg-in" id="tgNotif"><label class="tg-lb" for="tgNotif"></label></div>
+      </div>
+
+      <div class="stitle">Dados</div>
+      <div class="cfg-row">
+        <div class="cfg-info">
+          <span class="cfg-name">🗑️ Limpar minhas ocorrências</span>
+          <span class="cfg-desc">Remove todas as ocorrências que você reportou</span>
+        </div>
+        <button class="btn-danger" id="btnLimparMinhas">Limpar</button>
+      </div>
+      <div class="cfg-row">
+        <div class="cfg-info">
+          <span class="cfg-name">⚠️ Limpar todas as ocorrências</span>
+          <span class="cfg-desc">Remove todas as ocorrências do mapa</span>
+        </div>
+        <button class="btn-danger" id="btnLimparTodas">Limpar tudo</button>
+      </div>
+
+      <div class="stitle">Sobre o app</div>
+      <div class="about">
+        <strong style="color:var(--text);font-size:1rem">Bairro Seguro</strong><br>
+        Versão 1.0.0 · PUC Minas · 2026/1<br>
+        Projeto de Extensão I — Sistemas de Informação
+        <div class="team">
+          <span>Felipe</span><span>Fernando</span><span>Flavio</span><span>Bruno</span><span>Raphael</span>
+        </div>
+        <div style="margin-top:7px;font-size:11px">Orientador: Clóvis Lemos Tavares</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/sidebar.js"></script>
+  <script>
+  (function(){
+    if (!isAuthenticated()) { location.href="../pagina-login/login.html"; return; }
+    const user = getUserLogado();
+    const cfg  = getConfiguracoes();
+    const msg  = document.getElementById("msgC");
+    function show(t){ msg.textContent=t; msg.className="msg-c success"; setTimeout(function(){ msg.className="msg-c"; },3000); }
+
+    document.getElementById("tgTema").checked  = cfg.tema==="claro";
+    document.getElementById("tgNotif").checked = cfg.notificacoes!==false;
+
+    document.getElementById("tgTema").addEventListener("change", function(){
+      cfg.tema = this.checked?"claro":"escuro";
+      saveConfiguracoes(cfg);
+      if (cfg.tema==="claro") document.documentElement.setAttribute("data-tema","claro");
+      else document.documentElement.removeAttribute("data-tema");
+      show("Tema "+(cfg.tema==="claro"?"claro":"escuro")+" ativado.");
+    });
+    document.getElementById("tgNotif").addEventListener("change", function(){
+      cfg.notificacoes = this.checked; saveConfiguracoes(cfg);
+      show("Notificações "+(this.checked?"ativadas":"desativadas")+".");
+    });
+    document.getElementById("btnLimparMinhas").addEventListener("click", function(){
+      if (!confirm("Remover todas as suas ocorrências?")) return;
+      saveListaOcorrencias(getListaOcorrencias().filter(function(o){ return o.emailAutor!==user.emailUser; }));
+      show("Suas ocorrências foram removidas.");
+    });
+    document.getElementById("btnLimparTodas").addEventListener("click", function(){
+      if (!confirm("Remover TODAS as ocorrências de todos os usuários?")) return;
+      saveListaOcorrencias([]);
+      show("Todas as ocorrências foram removidas.");
+    });
+  })();
+  </script>
+</body>
+</html>

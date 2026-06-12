@@ -1,154 +1,263 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" href="styles.css">
-<title>Perfil - Bairro Seguro</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Perfil</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/sidebar.css">
+  <style>
+    body { background:var(--bg); }
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(14,18,37,0.95); }
+    .topbar h1 { margin:0; color:var(--brand); font-size:1.2rem; }
+    .topbar-user { color:var(--muted); font-size:0.9rem; }
+    .content { max-width:640px; margin:0 auto; padding:24px 22px 40px; }
 
-<!-- ICONS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    /* Avatar */
+    .avatar-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:24px; }
+    .avatar-circle { width:90px; height:90px; border-radius:50%; border:3px solid var(--brand); overflow:hidden; background:var(--panel); display:flex; align-items:center; justify-content:center; font-size:2.6rem; cursor:pointer; position:relative; }
+    .avatar-circle img { width:100%; height:100%; object-fit:cover; }
+    .avatar-ov { position:absolute; inset:0; background:rgba(0,0,0,0.45); display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .2s; font-size:1.3rem; border-radius:50%; }
+    .avatar-circle:hover .avatar-ov { opacity:1; }
+    .avatar-hint { font-size:11px; color:var(--muted); }
+
+    /* Ocorrências do usuário */
+    .oc-section { margin-bottom:20px; }
+    .oc-title { font-size:0.78rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .oc-list { display:grid; gap:8px; }
+    .oc-card { background:rgba(23,29,53,0.8); border:1px solid rgba(255,255,255,0.07); border-radius:11px; padding:11px 14px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .oc-card-info h4 { margin:0 0 3px; font-size:13px; }
+    .oc-card-info p  { margin:0; font-size:12px; color:var(--muted); }
+    .oc-card-time { text-align:right; font-size:11px; color:var(--muted); white-space:nowrap; }
+    .oc-empty { font-size:13px; color:var(--muted); text-align:center; padding:14px 0; }
+
+    /* Form */
+    .section-title { font-size:0.78rem; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin:22px 0 10px; }
+    hr.div { border:none; border-top:1px solid rgba(255,255,255,0.06); margin:18px 0; }
+    .fwrap { margin-bottom:13px; }
+    .fwrap label { display:block; font-size:11px; color:var(--muted); font-weight:600; margin-bottom:5px; }
+    .fwrap input, .fwrap select { width:100%; height:50px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); background:rgba(18,30,24,0.85); color:var(--field-text); padding:0 14px; font-size:1rem; font-family:inherit; appearance:none; }
+    .fwrap input:focus, .fwrap select:focus { outline:none; border-color:#4bcf67; }
+    .fwrap input::placeholder { color:#8a8d96; }
+    .pwd-wrap { position:relative; }
+    .pwd-wrap input { padding-right:46px; }
+    .pwd-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%); border:none; background:transparent; color:var(--muted); cursor:pointer; font-size:1rem; }
+    .btn-save { width:100%; height:52px; border:none; border-radius:14px; background:linear-gradient(90deg,var(--brand-strong),var(--brand)); color:#edf5ef; font-size:1.05rem; font-weight:700; cursor:pointer; margin-top:6px; }
+    .btn-save:hover { filter:brightness(1.08); }
+    .msg-p { border-radius:10px; padding:10px 13px; font-size:0.92rem; margin-bottom:12px; display:none; }
+    .msg-p.error   { display:block; background:#7a1313; border:1px solid #b93b3b; color:#fff; }
+    .msg-p.success { display:block; background:#10551f; border:1px solid #2f9c47; color:#fff; }
+  </style>
 </head>
+<body class="app-layout">
 
-<body>
-
-<div class="container">
-
-<!-- SIDEBAR -->
-<aside class="sidebar">
-<div class="logo">
-    <h1>Bairro<br>Seguro</h1>
-</div>
-
-<nav>
-    <i class="fa-solid fa-house"></i>
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <i class="fa-regular fa-user"></i>
-    <i class="fa-regular fa-map"></i>
-    <i class="fa-regular fa-bell"></i>
-</nav>
-</aside>
-
-<!-- MAIN -->
-<main class="main-content">
-
-<!-- HEADER -->
-<header class="topbar">
-    <div class="menu-links">
-    <a href="#">Sobre</a>
-    <a href="#">Como funciona</a>
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-mark" aria-hidden="true"></div></div>
+    <nav class="sidebar-nav">
+      <a href="../paginaHome/index.html" class="sidebar-item" data-page="paginaHome" title="Início">
+        <i class="fa-solid fa-house"></i><span>Início</span>
+      </a>
+      <a href="../pagina-perfil/index.html" class="sidebar-item ativo" data-page="pagina-perfil" title="Perfil">
+        <span id="sidebarAvatar" style="font-size:20px;line-height:1">👤</span>
+        <span id="sidebarNome">Perfil</span>
+      </a>
+      <a href="../paginaConfiguracoes/index.html" class="sidebar-item" data-page="paginaConfiguracoes" title="Configurações">
+        <i class="fa-solid fa-gear"></i><span>Config</span>
+      </a>
+      <a href="../paginaModerador/index.html" class="sidebar-item" data-page="paginaModerador" id="linkModerador" title="Moderação" style="display:none">
+        <i class="fa-solid fa-shield-halved"></i><span>Mod</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="sidebarLogout" title="Sair">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Sair</span>
+      </button>
     </div>
+  </aside>
 
-    <div class="top-actions">
-    <button class="login-btn">
-        <i class="fa-solid fa-right-to-bracket"></i>
-        Sarah Oliveira
-    </button>
+  <div class="sidebar-content">
+    <header class="topbar">
+      <h1>Meu Perfil</h1>
+      <span class="topbar-user" id="topUser"></span>
+    </header>
 
-    <i class="fa-solid fa-gear settings"></i>
-    </div>
-</header>
+    <div class="content">
+      <div id="msgP" class="msg-p"></div>
 
-<!-- PROFILE -->
-<section class="profile">
-
-    <img src="img/perfil.jpg" class="profile-img">
-
-    <div class="verified">
-    <i class="fa-solid fa-check"></i>
-    <span>23</span>
-    </div>
-
-    <h2>Sarah Oliveira</h2>
-
-    <div class="badge">
-    Morador
-    </div>
-
-    <p class="location">
-    Belvedere, Belo Horizonte - MG, Brasil
-    </p>
-
-</section>
-
-<!-- REPORTS -->
-<section class="reports" id="reports">
-
-    <div class="report danger">
-    <div>
-        <h4>Assalto/roubo</h4>
-        <p>Praça Lagoa Seca</p>
-    </div>
-
-    <div class="time">
-        <span>21:30</span>
-        <small>02/03/2026</small>
-    </div>
-    </div>
-
-    <div class="report warning">
-    <div>
-        <h4>Vandalismo</h4>
-        <p>Rua Paisagem</p>
-    </div>
-
-    <div class="time">
-        <span>23:40</span>
-        <small>12/02/2026</small>
-    </div>
-    </div>
-
-</section>
-
-<!-- BUTTON -->
-<div class="button-area">
-    <button class="report-btn">
-    <i class="fa-solid fa-plus"></i>
-    Reportar ocorrência
-    </button>
-</div>
-
-</main>
-
-</div>
-<!-- MODAL -->
-<div class="modal" id="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            <h2>Nova ocorrência</h2>
-
-            <button class="close-modal" id="fecharBtn">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+      <!-- Avatar -->
+      <div class="avatar-wrap">
+        <div class="avatar-circle" id="avatarCircle" title="Clique para trocar a foto">
+          <img id="avatarImg" src="" alt="Foto" style="display:none">
+          <span id="avatarEmoji">👤</span>
+          <div class="avatar-ov">📷</div>
         </div>
+        <span class="avatar-hint">Clique na foto para alterar</span>
+        <input type="file" id="fotoInput" accept="image/*" hidden>
+      </div>
 
-        <div class="modal-body">
+      <!-- Ocorrências do usuário -->
+      <div class="oc-section">
+        <div class="oc-title">Minhas ocorrências</div>
+        <div class="oc-list" id="minhasOcs"></div>
+      </div>
 
-         <input type="text" id="tipoInput" placeholder="Tipo da ocorrência">
+      <hr class="div">
+      <div class="section-title">Dados pessoais</div>
+      <div class="fwrap"><label>Nome completo</label><input id="pNome" type="text" placeholder="Seu nome"></div>
+      <div class="fwrap"><label>E-mail</label><input id="pEmail" type="email" placeholder="Seu e-mail"></div>
+      <div class="fwrap"><label>Telefone</label><input id="pTel" type="tel" placeholder="(00) 00000-0000"></div>
 
-<input type="text" id="localInput" placeholder="Local">
+      <hr class="div">
+      <div class="section-title">Localização</div>
+      <div class="fwrap"><label>Bairro</label><input id="pBairro" type="text" placeholder="Seu bairro"></div>
+      <div class="fwrap"><label>Endereço</label><input id="pEnd" type="text" placeholder="Rua, número"></div>
 
-<textarea id="descricaoInput" placeholder="Descrição"></textarea>
-
-<button class="send-btn" id="enviarBtn">
-    <i class="fa-solid fa-paper-plane"></i>
-    Enviar ocorrência
-</button>
-
+      <hr class="div">
+      <div class="section-title">Segurança</div>
+      <div class="fwrap">
+        <label>Senha atual</label>
+        <div class="pwd-wrap">
+          <input id="pSenhaAtual" type="password" placeholder="Digite a senha atual para alterar">
+          <button class="pwd-toggle" type="button" data-t="pSenhaAtual"><i class="fa-regular fa-eye"></i></button>
         </div>
+      </div>
+      <div class="fwrap">
+        <label>Nova senha <span style="font-weight:400;color:var(--muted)">(deixe vazio para não alterar)</span></label>
+        <div class="pwd-wrap">
+          <input id="pNovaSenha" type="password" placeholder="Nova senha (mín. 6 caracteres)">
+          <button class="pwd-toggle" type="button" data-t="pNovaSenha"><i class="fa-regular fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="fwrap">
+        <label>Confirmar nova senha</label>
+        <div class="pwd-wrap">
+          <input id="pConfSenha" type="password" placeholder="Confirmar nova senha">
+          <button class="pwd-toggle" type="button" data-t="pConfSenha"><i class="fa-regular fa-eye"></i></button>
+        </div>
+      </div>
 
+      <hr class="div">
+      <div class="section-title">Pergunta de segurança</div>
+      <div class="fwrap">
+        <label>Pergunta</label>
+        <select id="pPergunta">
+          <option value="nome_mae">Qual o nome da sua mãe?</option>
+          <option value="nome_pet">Qual o nome do seu primeiro animal de estimação?</option>
+          <option value="cidade_nasceu">Em qual cidade você nasceu?</option>
+          <option value="escola_primaria">Qual o nome da sua escola primária?</option>
+          <option value="time_coracao">Qual o seu time do coração?</option>
+        </select>
+      </div>
+      <div class="fwrap"><label>Resposta</label><input id="pResposta" type="text" placeholder="Sua resposta secreta"></div>
+
+      <button class="btn-save" id="btnSalvar">Salvar alterações</button>
     </div>
+  </div>
 
-</div>
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/sidebar.js"></script>
+  <script>
+  (function(){
+    if (!isAuthenticated()) { location.href="../pagina-login/login.html"; return; }
+    const user = getUserLogado();
+    document.getElementById("topUser").textContent = user.nomeUser||"";
 
-<div class="success-message" id="successMessage">
-    Ocorrência enviada com sucesso
-</div>
+    // Avatar
+    const avatarCircle = document.getElementById("avatarCircle");
+    const avatarImg    = document.getElementById("avatarImg");
+    const avatarEmoji  = document.getElementById("avatarEmoji");
+    const fotoInput    = document.getElementById("fotoInput");
+    function setAvatar(src) {
+      if (src) { avatarImg.src=src; avatarImg.style.display="block"; avatarEmoji.style.display="none"; }
+      else     { avatarImg.style.display="none"; avatarEmoji.style.display="block"; }
+    }
+    setAvatar(user.fotoPerfilUser||"");
+    avatarCircle.addEventListener("click", function(){ fotoInput.click(); });
+    fotoInput.addEventListener("change", function(){
+      const f=fotoInput.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=function(e){ setAvatar(e.target.result); }; r.readAsDataURL(f);
+    });
 
-<script src="script.js"></script>
+    // Ocorrências do usuário
+    const todas = getListaOcorrencias();
+    const minhas = todas.filter(function(o){ return o.emailAutor===user.emailUser; }).slice(0,6);
+    const ocEl = document.getElementById("minhasOcs");
+    if (!minhas.length) {
+      ocEl.innerHTML='<div class="oc-empty">Você ainda não reportou nenhuma ocorrência.</div>';
+    } else {
+      ocEl.innerHTML = minhas.map(function(o){
+        const d=new Date(o.criadoEm);
+        return '<div class="oc-card"><div class="oc-card-info"><h4>'+o.emoji+' '+o.tipo+'</h4><p>'+o.endereco+'</p></div>'
+          +'<div class="oc-card-time">'+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})+'<br><small>'+d.toLocaleDateString("pt-BR")+'</small></div></div>';
+      }).join("");
+    }
 
+    // Preencher form
+    document.getElementById("pNome").value    = user.nomeUser||"";
+    document.getElementById("pEmail").value   = user.emailUser||"";
+    document.getElementById("pTel").value     = user.telefoneUser||"";
+    document.getElementById("pBairro").value  = user.bairroUser||"";
+    document.getElementById("pEnd").value     = user.enderecoUser||"";
+    document.getElementById("pResposta").value= user.respostaSecreta||"";
+    if (user.perguntaSecreta) document.getElementById("pPergunta").value=user.perguntaSecreta;
+
+    // Toggle senha
+    document.querySelectorAll(".pwd-toggle").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        const inp=document.getElementById(btn.dataset.t);
+        const ok=inp.type==="text"; inp.type=ok?"password":"text";
+        btn.innerHTML=ok?'<i class="fa-regular fa-eye"></i>':'<i class="fa-regular fa-eye-slash"></i>';
+      });
+    });
+
+    // Salvar
+    document.getElementById("btnSalvar").addEventListener("click", function(){
+      const nome  = document.getElementById("pNome").value.trim();
+      const email = document.getElementById("pEmail").value.trim().toLowerCase();
+      const tel   = document.getElementById("pTel").value.trim();
+      const bairro= document.getElementById("pBairro").value.trim();
+      const end   = document.getElementById("pEnd").value.trim();
+      const senhaAt = document.getElementById("pSenhaAtual").value;
+      const novaSen = document.getElementById("pNovaSenha").value;
+      const confSen = document.getElementById("pConfSenha").value;
+      const pergunta= document.getElementById("pPergunta").value;
+      const resposta= document.getElementById("pResposta").value.trim().toLowerCase();
+      const msg = document.getElementById("msgP");
+      function show(t,k){ msg.textContent=t; msg.className="msg-p "+k; msg.scrollIntoView({block:"nearest"}); }
+
+      if (nome.length<2)      { show("Nome muito curto.","error"); return; }
+      if (!email.includes("@")){ show("E-mail inválido.","error"); return; }
+
+      const lista = getListaUser();
+      const idx = lista.findIndex(function(u){ return u.emailUser.toLowerCase()===user.emailUser.toLowerCase(); });
+      if (idx===-1) { show("Usuário não encontrado.","error"); return; }
+
+      if (novaSen) {
+        if (!senhaAt)          { show("Digite a senha atual.","error"); return; }
+        if (lista[idx].senhaUser!==senhaAt) { show("Senha atual incorreta.","error"); return; }
+        if (novaSen.length<6)  { show("Nova senha: mínimo 6 caracteres.","error"); return; }
+        if (novaSen!==confSen) { show("As senhas não conferem.","error"); return; }
+      }
+      const emailEmUso = lista.some(function(u,i){ return i!==idx && u.emailUser.toLowerCase()===email; });
+      if (emailEmUso) { show("Este e-mail já está em uso.","error"); return; }
+
+      const novaFoto = (avatarImg.style.display!=="none" && avatarImg.src && !avatarImg.src.endsWith("perfil.jpg"))
+        ? avatarImg.src : (user.fotoPerfilUser||"");
+
+      lista[idx] = Object.assign({}, lista[idx], {
+        nomeUser:nome, emailUser:email, telefoneUser:tel,
+        bairroUser:bairro, enderecoUser:end,
+        senhaUser: novaSen||lista[idx].senhaUser,
+        perguntaSecreta:pergunta, respostaSecreta:resposta,
+        fotoPerfilUser:novaFoto
+      });
+      saveListaUser(lista);
+      setUserLogado(lista[idx]);
+      document.getElementById("topUser").textContent = nome;
+      show("Perfil atualizado com sucesso!","success");
+    });
+  })();
+  </script>
 </body>
 </html>

@@ -5,82 +5,155 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bairro Seguro | Ocorrências</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/sidebar.css">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="topbar">
-    <div class="topbar-left">
-      <div class="brand-mark small" aria-hidden="true"></div>
+<body class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark" aria-hidden="true"></div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="../paginaHome/index.html" class="sidebar-item" data-page="paginaHome" title="Início">
+        <i class="fa-solid fa-house"></i><span>Início</span>
+      </a>
+      <a href="../pagina-perfil/index.html" class="sidebar-item" data-page="pagina-perfil" title="Perfil">
+        <span id="sidebarAvatar" style="font-size:20px;line-height:1">👤</span>
+        <span id="sidebarNome">Perfil</span>
+      </a>
+      <a href="../paginaConfiguracoes/index.html" class="sidebar-item" data-page="paginaConfiguracoes" title="Configurações">
+        <i class="fa-solid fa-gear"></i><span>Config</span>
+      </a>
+      <a href="../paginaModerador/index.html" class="sidebar-item" data-page="paginaModerador"
+         id="linkModerador" title="Moderação" style="display:none">
+        <i class="fa-solid fa-shield-halved"></i><span>Mod</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="sidebarLogout" title="Sair">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Sair</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <div class="sidebar-content">
+    <header class="topbar">
       <h1>Bairro Seguro</h1>
-    </div>
-    <div class="topbar-right">
-      <span id="boasVindas">Olá, morador</span>
-      <button id="sairBtn" type="button">Sair</button>
-    </div>
-  </header>
+      <span id="boasVindas" class="topbar-user">Olá, morador</span>
+    </header>
 
-  <main class="layout">
-    <section class="search-wrap">
-      <input id="buscaBairro" type="text" placeholder="Buscar bairro, endereço ou tipo de ocorrência...">
-    </section>
+    <main class="layout">
 
-    <section class="map-card" aria-label="Mapa de ocorrências">
-      <div id="map"></div>
-      <div class="map-hint">Busque um CEP, clique no mapa e use o emoji para registrar a ocorrência.</div>
-    </section>
-
-    <section class="occurrences">
-      <div class="occurrences-header">
-        <div class="occurrences-title">Ocorrências</div>
-      </div>
-      <ul id="listaOcorrencias"></ul>
-    </section>
-
-    <section class="actions">
-      <div class="cep-row">
-        <input id="cepInput" type="text" inputmode="numeric" placeholder="Digite o CEP no formato XXXXX-XXX" maxlength="9">
-        <button type="button" id="buscarCepBtn">Buscar CEP</button>
-      </div>
-
-      <div id="enderecoEncontrado" class="endereco-box">
-        <p id="enderecoTexto"></p>
-      </div>
-
-      <div id="formOcorrencia" class="form-occurrence">
-        <select id="emojiSelect">
-          <option value="">Selecione o emoji da ocorrência</option>
-          <option value="🚨">🚨 Assalto/roubo</option>
-          <option value="💡">💡 Iluminação apagada</option>
-          <option value="🔊">🔊 Som alto/barulho</option>
-          <option value="🚫">🚫 Vandalismo/dano</option>
-          <option value="⚠️">⚠️ Assédio</option>
-          <option value="📍">📍 Outro problema</option>
+      <!-- Busca + filtro -->
+      <section class="search-wrap">
+        <input id="buscaBairro" type="text" placeholder="Buscar bairro, endereço ou tipo de ocorrência...">
+        <select id="filtroGravidade" class="filtro-select">
+          <option value="">Todos os níveis</option>
+          <option value="perigo_extremo">🔴 Perigo extremo</option>
+          <option value="perigo">🟠 Perigo</option>
+          <option value="atencao">🟡 Atenção</option>
         </select>
-        <textarea id="detalheInput" rows="3" placeholder="Detalhe a ocorrência (opcional)"></textarea>
-        <div class="form-actions">
-          <button type="button" id="relatarBtn">Relatar no mapa</button>
-          <button type="button" id="limparBtn" class="btn-secondary">Limpar seleção</button>
+      </section>
+
+      <!-- Mapa -->
+      <section class="map-card" aria-label="Mapa de ocorrências">
+        <div id="map"></div>
+        <div class="map-hint">👆 Clique em qualquer ponto do mapa para selecionar o local da ocorrência</div>
+      </section>
+
+      <!-- Ocorrências -->
+      <section class="occurrences">
+        <div class="occurrences-title">Ocorrências registradas</div>
+        <ul id="listaOcorrencias"></ul>
+      </section>
+
+      <!-- Formulário — SEMPRE VISÍVEL -->
+      <section class="actions">
+
+        <!-- Indicador de local selecionado -->
+        <div id="locSelecionado" class="loc-box loc-vazio">
+          <span id="locTexto">📍 Nenhum local selecionado — clique no mapa ou busque um CEP abaixo</span>
         </div>
-      </div>
 
-      <p id="feedbackBusca" class="feedback" aria-live="polite"></p>
-      <p id="feedbackRelato" class="feedback" aria-live="polite"></p>
-    </section>
-  </main>
+        <!-- Busca CEP -->
+        <div class="cep-row">
+          <input id="cepInput" type="text" inputmode="numeric" placeholder="Buscar por CEP — XXXXX-XXX" maxlength="9">
+          <button type="button" id="buscarCepBtn">Buscar CEP</button>
+        </div>
 
-  <!-- Modal de edição -->
-  <div id="editModal" class="edit-modal-overlay" role="dialog" aria-modal="true" aria-label="Editar ocorrência">
-    <div class="edit-modal-box">
-      <div class="edit-modal-header">
+        <!-- Formulário de ocorrência (sempre visível) -->
+        <div class="form-occurrence">
+
+          <div class="form-2col">
+            <div class="fgroup">
+              <label class="flabel" for="emojiSelect">Tipo de ocorrência *</label>
+              <select id="emojiSelect">
+                <option value="">Selecione o tipo</option>
+                <option value="🚨">🚨 Assalto/roubo</option>
+                <option value="💡">💡 Iluminação apagada</option>
+                <option value="🔊">🔊 Som alto/barulho</option>
+                <option value="🚫">🚫 Vandalismo/dano</option>
+                <option value="⚠️">⚠️ Assédio</option>
+                <option value="📍">📍 Outro problema</option>
+              </select>
+            </div>
+            <div class="fgroup">
+              <label class="flabel" for="gravidadeSelect">Nível de gravidade *</label>
+              <select id="gravidadeSelect">
+                <option value="atencao">🟡 Atenção</option>
+                <option value="perigo">🟠 Perigo</option>
+                <option value="perigo_extremo">🔴 Perigo extremo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="fgroup">
+            <label class="flabel" for="detalheInput">
+              Descrição <span class="flabel-hint">(opcional — se preencher, use mínimo 20 caracteres)</span>
+            </label>
+            <textarea id="detalheInput" rows="3" placeholder="Descreva a ocorrência com mais detalhes..."></textarea>
+          </div>
+
+          <div class="fgroup">
+            <label class="flabel">Fotos ou vídeos <span class="flabel-hint">(opcional · máx. 5 arquivos)</span></label>
+            <label class="upload-area" for="midiaInput" id="uploadArea">
+              <span style="font-size:1.4rem">📎</span>
+              <span style="color:#c8cedf;font-size:13px">Clique ou arraste arquivos aqui</span>
+              <span style="color:var(--muted);font-size:11px">Imagens e vídeos · preview local</span>
+              <input id="midiaInput" type="file" accept="image/*,video/*" multiple hidden>
+            </label>
+            <div id="midiaPreview" class="midia-preview"></div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="relatarBtn" class="btn-relatar">📌 Relatar no mapa</button>
+            <button type="button" id="limparBtn"  class="btn-sec">✕ Limpar seleção</button>
+          </div>
+        </div>
+
+        <p id="feedbackBusca"  class="feedback" aria-live="polite"></p>
+        <p id="feedbackRelato" class="feedback" aria-live="polite"></p>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal edição -->
+  <div id="editModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-hdr">
         <h2>Editar ocorrência</h2>
-        <button id="editModalClose" class="edit-modal-close" aria-label="Fechar">✕</button>
+        <button id="editClose" class="modal-x" type="button">✕</button>
       </div>
-      <form id="editForm" class="edit-form">
+      <form id="editForm" class="mform">
         <input type="hidden" id="editId">
-
-        <label class="edit-label" for="editEmoji">Tipo de ocorrência</label>
-        <select id="editEmoji" class="edit-select">
+        <label class="flabel">Tipo</label>
+        <select id="editEmoji" class="minput">
           <option value="">Selecione</option>
           <option value="🚨">🚨 Assalto/roubo</option>
           <option value="💡">💡 Iluminação apagada</option>
@@ -89,16 +162,45 @@
           <option value="⚠️">⚠️ Assédio</option>
           <option value="📍">📍 Outro problema</option>
         </select>
+        <label class="flabel">Gravidade</label>
+        <select id="editGravidade" class="minput">
+          <option value="atencao">🟡 Atenção</option>
+          <option value="perigo">🟠 Perigo</option>
+          <option value="perigo_extremo">🔴 Perigo extremo</option>
+        </select>
+        <label class="flabel">Endereço</label>
+        <input id="editEndereco" class="minput" type="text" placeholder="Endereço">
+        <label class="flabel">Descrição</label>
+        <textarea id="editDetalhe" class="minput" rows="3" style="resize:vertical"></textarea>
+        <div class="mbtns">
+          <button type="submit" class="mbtn-ok">Salvar alterações</button>
+          <button type="button" id="editCancel" class="mbtn-cancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-        <label class="edit-label" for="editEndereco">Endereço</label>
-        <input id="editEndereco" class="edit-input" type="text" placeholder="Endereço da ocorrência">
-
-        <label class="edit-label" for="editDetalhe">Descrição</label>
-        <textarea id="editDetalhe" class="edit-textarea" rows="4" placeholder="Detalhe a ocorrência..."></textarea>
-
-        <div class="edit-actions">
-          <button type="submit" class="edit-btn-save">Salvar alterações</button>
-          <button type="button" id="editModalClose2" class="edit-btn-cancel">Cancelar</button>
+  <!-- Modal denúncia -->
+  <div id="denModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h2>Denunciar ocorrência</h2>
+        <button id="denClose" class="modal-x" type="button">✕</button>
+      </div>
+      <form id="denForm" class="mform">
+        <input type="hidden" id="denId">
+        <label class="flabel">Motivo da denúncia *</label>
+        <select id="denMotivo" class="minput">
+          <option value="">Selecione o motivo</option>
+          <option value="informacao_falsa">Informação falsa</option>
+          <option value="conteudo_ofensivo">Conteúdo ofensivo</option>
+          <option value="spam">Spam / repetido</option>
+          <option value="privacidade">Violação de privacidade</option>
+          <option value="outro">Outro</option>
+        </select>
+        <div class="mbtns">
+          <button type="submit" class="mbtn-ok">Enviar denúncia</button>
+          <button type="button" id="denCancel" class="mbtn-cancel">Cancelar</button>
         </div>
       </form>
     </div>
@@ -106,12 +208,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../assets/utils.js"></script>
+  <script src="../assets/sidebar.js"></script>
   <script src="script.js"></script>
-  <script>
-    // Segundo botão cancelar do modal
-    document.getElementById("editModalClose2").addEventListener("click", function () {
-      document.getElementById("editModal").classList.remove("visible");
-    });
-  </script>
 </body>
 </html>

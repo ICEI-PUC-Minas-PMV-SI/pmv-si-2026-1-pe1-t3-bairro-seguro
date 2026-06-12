@@ -1,507 +1,474 @@
 (function initHome() {
-  if (!isAuthenticated()) {
-    globalThis.location.href = "../pagina-login/login.html";
-    return;
+  if (!isAuthenticated()) { location.href = "../pagina-login/login.html"; return; }
+  const user = getUserLogado();
+  if (verificarBanimento(user)) { logout(); location.href = "../pagina-login/login.html?banido=1"; return; }
+
+  // ── refs ──────────────────────────────────────────────────────────────────
+  const $ = function(id) { return document.getElementById(id); };
+  const boasVindas   = $("boasVindas");
+  const buscaInput   = $("buscaBairro");
+  const filtroGrav   = $("filtroGravidade");
+  const listaEl      = $("listaOcorrencias");
+  const cepInput     = $("cepInput");
+  const buscarCepBtn = $("buscarCepBtn");
+  const locSel       = $("locSelecionado");
+  const locTexto     = $("locTexto");
+  const emojiSel     = $("emojiSelect");
+  const gravSel      = $("gravidadeSelect");
+  const detalheIn    = $("detalheInput");
+  const midiaInput   = $("midiaInput");
+  const midiaPreview = $("midiaPreview");
+  const uploadArea   = $("uploadArea");
+  const relatarBtn   = $("relatarBtn");
+  const limparBtn    = $("limparBtn");
+  const fbBusca      = $("feedbackBusca");
+  const fbRelato     = $("feedbackRelato");
+  const editModal    = $("editModal");
+  const editForm     = $("editForm");
+  const denModal     = $("denModal");
+  const denForm      = $("denForm");
+
+  if (boasVindas) boasVindas.textContent = "Olá, " + (user.nomeUser || "morador");
+
+  // ── estado ────────────────────────────────────────────────────────────────
+  let selLoc = null;
+  let selMark = null;
+  let midiaFiles = [];
+  let ocorrencias = carregarPersistidas();
+
+  // ── mapa ──────────────────────────────────────────────────────────────────
+  // Garantir que o container tem altura antes de inicializar o Leaflet
+  const mapEl = document.getElementById("map");
+  if (mapEl && mapEl.offsetHeight === 0) {
+    mapEl.style.height = "400px";
   }
 
-  const user = getUserLogado();
-  const boasVindas     = document.getElementById("boasVindas");
-  const buscaInput     = document.getElementById("buscaBairro");
-  const listaEl        = document.getElementById("listaOcorrencias");
-  const sairBtn        = document.getElementById("sairBtn");
-  const cepInput       = document.getElementById("cepInput");
-  const buscarCepBtn   = document.getElementById("buscarCepBtn");
-  const enderecoBox    = document.getElementById("enderecoEncontrado");
-  const enderecoTexto  = document.getElementById("enderecoTexto");
-  const formOcorrencia = document.getElementById("formOcorrencia");
-  const emojiSelect    = document.getElementById("emojiSelect");
-  const detalheInput   = document.getElementById("detalheInput");
-  const relatarBtn     = document.getElementById("relatarBtn");
-  const limparBtn      = document.getElementById("limparBtn");
-  const feedbackBusca  = document.getElementById("feedbackBusca");
-  const feedbackRelato = document.getElementById("feedbackRelato");
-
-  // ── Modal de edição ────────────────────────────────────────────────────────
-  const editModal        = document.getElementById("editModal");
-  const editModalClose   = document.getElementById("editModalClose");
-  const editForm         = document.getElementById("editForm");
-  const editEmoji        = document.getElementById("editEmoji");
-  const editDetalhe      = document.getElementById("editDetalhe");
-  const editEndereco     = document.getElementById("editEndereco");
-  const editIdInput      = document.getElementById("editId");
-
-  boasVindas.textContent = "Olá, " + (user?.nomeUser || "morador");
-
-  // ── Mapa ───────────────────────────────────────────────────────────────────
   const mapa = L.map("map", { zoomControl: true }).setView([-14.235, -51.9253], 4);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(mapa);
 
-  const markersLayer  = L.layerGroup().addTo(mapa);
-  const selectionLayer = L.layerGroup().addTo(mapa);
-  const markerById    = new Map();
-
-  let selectedLocation = null;
-  let selectedMarker   = null;
-  let ocorrencias      = carregarOcorrenciasPersistidas();
+  const markersLayer = L.layerGroup().addTo(mapa);
+  const selLayer     = L.layerGroup().addTo(mapa);
+  const markerById   = new Map();
 
   renderAll();
 
-  // ── Listeners ──────────────────────────────────────────────────────────────
+  // Garantir que o Leaflet recalcula o tamanho após o layout com sidebar renderizar
+  requestAnimationFrame(function () {
+    mapa.invalidateSize();
+    setTimeout(function () { mapa.invalidateSize(); }, 300);
+  });
+
+  // ── listeners ─────────────────────────────────────────────────────────────
   buscaInput.addEventListener("input", renderAll);
+  filtroGrav.addEventListener("change", renderAll);
+  buscarCepBtn.addEventListener("click", buscarCep);
+  relatarBtn.addEventListener("click", salvarOcorrencia);
+  limparBtn.addEventListener("click", limparSel);
 
   cepInput.addEventListener("input", function (e) {
-    e.target.value = formatCep(e.target.value);
+    e.target.value = fmtCep(e.target.value);
   });
   cepInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); buscarCep(); }
   });
 
-  buscarCepBtn.addEventListener("click", buscarCep);
-  relatarBtn.addEventListener("click", salvarOcorrencia);
-  limparBtn.addEventListener("click", function () { limparSelecao(false); });
-
-  sairBtn.addEventListener("click", function () {
-    logout();
-    globalThis.location.href = "../pagina-login/login.html";
+  // upload de mídia
+  uploadArea.addEventListener("dragover", function (e) {
+    e.preventDefault(); uploadArea.classList.add("drag-over");
+  });
+  uploadArea.addEventListener("dragleave", function () {
+    uploadArea.classList.remove("drag-over");
+  });
+  uploadArea.addEventListener("drop", function (e) {
+    e.preventDefault(); uploadArea.classList.remove("drag-over");
+    addMidias(Array.from(e.dataTransfer.files));
+  });
+  midiaInput.addEventListener("change", function () {
+    addMidias(Array.from(midiaInput.files));
   });
 
-  // ── Clique no mapa: geocodificação reversa ─────────────────────────────────
-  mapa.on("click", async function (event) {
-    const lat = event.latlng.lat;
-    const lng = event.latlng.lng;
+  function addMidias(files) {
+    midiaFiles = midiaFiles
+      .concat(files.filter(function (f) { return f.type.startsWith("image/") || f.type.startsWith("video/"); }))
+      .slice(0, 5);
+    renderMidias();
+  }
 
-    // Coloca o pin imediatamente e abre o formulário
-    selecionarLocal({
-      origem: "mapa", cep: "", endereco: "Buscando endereço...",
-      bairro: "", cidade: "", estado: "", lat: lat, lng: lng
+  function renderMidias() {
+    midiaPreview.innerHTML = "";
+    midiaFiles.forEach(function (f, i) {
+      const d = document.createElement("div"); d.className = "midia-item";
+      if (f.type.startsWith("image/")) {
+        const img = document.createElement("img"); img.src = URL.createObjectURL(f); d.appendChild(img);
+      } else {
+        d.innerHTML = '<div class="midia-vid">🎬</div>';
+      }
+      const btn = document.createElement("button"); btn.className = "midia-rm"; btn.textContent = "✕";
+      btn.onclick = function () { midiaFiles.splice(i, 1); renderMidias(); };
+      d.appendChild(btn); midiaPreview.appendChild(d);
     });
-    mostrarEnderecoSelecionado("Buscando endereço...");
-    abrirFormularioRelato();
+  }
+
+  // ── clique no mapa → geocodificação reversa ────────────────────────────────
+  mapa.on("click", async function (ev) {
+    const lat = ev.latlng.lat, lng = ev.latlng.lng;
+
+    // pin imediato
+    colocarPin({ origem: "mapa", cep: "", endereco: "Buscando endereço...", bairro: "", cidade: "", estado: "", lat, lng });
+    setLocInfo("⏳ Identificando endereço...", false);
     cepInput.value = "";
-    showBuscaFeedback("Identificando endereço do ponto selecionado...", "");
+    setFbBusca("Aguarde, identificando o endereço do ponto...", "");
 
     try {
-      // Geocodificação reversa: coordenadas → endereço + CEP
-      const reverseRes = await fetch(
+      const r = await fetch(
         "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lng + "&addressdetails=1&accept-language=pt-BR",
         { headers: { Accept: "application/json" } }
       );
+      if (!r.ok) throw new Error("nominatim falhou");
+      const d = await r.json(), a = d.address || {};
 
-      if (!reverseRes.ok) throw new Error("Falha na geocodificação reversa");
-      const reverseData = await reverseRes.json();
+      const pc      = a.postcode ? a.postcode.replace(/\D/g, "") : "";
+      const cepFmt  = pc.length === 8 ? pc.slice(0, 5) + "-" + pc.slice(5) : "";
+      const rua     = a.road || a.pedestrian || a.footway || "";
+      const bairro  = a.suburb || a.neighbourhood || a.city_district || "";
+      const cidade  = a.city || a.town || a.village || a.municipality || "";
+      const estado  = a.state_code || a.state || "";
+      const end     = [rua, bairro, cidade, estado].filter(Boolean).join(", ") || d.display_name || "Ponto selecionado";
 
-      const addr        = reverseData.address || {};
-      const postcode    = addr.postcode ? addr.postcode.replace(/\D/g, "") : "";
-      const cepFormatado = postcode.length === 8
-        ? postcode.slice(0, 5) + "-" + postcode.slice(5)
-        : "";
-
-      const logradouro = addr.road || addr.pedestrian || addr.footway || "";
-      const bairro     = addr.suburb || addr.neighbourhood || addr.city_district || "";
-      const cidade     = addr.city || addr.town || addr.village || addr.municipality || "";
-      const estado     = addr.state_code || addr.state || "";
-      const enderecoMontado = [logradouro, bairro, cidade, estado]
-        .map(function (p) { return String(p || "").trim(); })
-        .filter(Boolean).join(", ") || reverseData.display_name || "Ponto selecionado no mapa";
-
-      // Atualiza selectedLocation com dados completos
-      selectedLocation = {
-        origem: "mapa",
-        cep: cepFormatado,
-        endereco: enderecoMontado,
-        bairro: bairro,
-        cidade: cidade,
-        estado: estado,
-        lat: lat,
-        lng: lng
-      };
-
-      // Preenche o campo CEP automaticamente se encontrou
-      if (cepFormatado) {
-        cepInput.value = cepFormatado;
-        mostrarEnderecoSelecionado("CEP " + cepFormatado + " • " + enderecoMontado);
-        showBuscaFeedback("Endereço identificado. Selecione o emoji e detalhe a ocorrência.", "success");
-      } else {
-        mostrarEnderecoSelecionado(enderecoMontado);
-        showBuscaFeedback("Endereço identificado (sem CEP disponível). Selecione o emoji e detalhe a ocorrência.", "success");
-      }
-
+      selLoc = { origem: "mapa", cep: cepFmt, endereco: end, bairro, cidade, estado, lat, lng };
+      if (cepFmt) cepInput.value = cepFmt;
+      setLocInfo("📍 " + (cepFmt ? "CEP " + cepFmt + " · " : "") + end, true);
+      setFbBusca("✅ Local selecionado! Preencha o tipo e clique em Relatar.", "success");
     } catch (_) {
-      // Se a geocodificação reversa falhar, mantém ponto selecionado sem endereço
-      selectedLocation = {
-        origem: "mapa", cep: "",
-        endereco: "Ponto selecionado no mapa",
-        bairro: "", cidade: "", estado: "", lat: lat, lng: lng
-      };
-      mostrarEnderecoSelecionado("Ponto selecionado no mapa");
-      showBuscaFeedback("Não foi possível identificar o endereço. Você ainda pode relatar a ocorrência.", "error");
+      selLoc = { origem: "mapa", cep: "", endereco: "Ponto selecionado no mapa", bairro: "", cidade: "", estado: "", lat, lng };
+      setLocInfo("📍 Ponto selecionado no mapa", true);
+      setFbBusca("Endereço não identificado, mas você pode relatar normalmente.", "error");
     }
   });
 
   window.addEventListener("storage", function (e) {
-    if (e.key === "ocorrencias") {
-      ocorrencias = carregarOcorrenciasPersistidas();
-      renderAll();
-    }
+    if (e.key === "ocorrencias") { ocorrencias = carregarPersistidas(); renderAll(); }
   });
 
-  requestAnimationFrame(function () { mapa.invalidateSize(); });
-
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── render ────────────────────────────────────────────────────────────────
   function renderAll() {
     const termo = buscaInput.value.trim().toLowerCase();
-    const filtradas = filtrarOcorrencias(ocorrencias, termo);
-    renderLista(filtradas);
-    renderMarcadores(filtradas);
+    const grav  = filtroGrav.value;
+    let lista = ocorrencias.slice().sort(function (a, b) { return new Date(b.criadoEm) - new Date(a.criadoEm); });
+    if (termo) lista = lista.filter(function (o) {
+      return [o.cep, o.endereco, o.bairro, o.tipo, o.detalhes].join(" ").toLowerCase().includes(termo);
+    });
+    if (grav) lista = lista.filter(function (o) { return o.gravidade === grav; });
+    renderLista(lista);
+    renderMarcadores(lista);
   }
 
-  function filtrarOcorrencias(lista, termo) {
-    const ordenada = lista.slice().sort(function (a, b) {
-      return new Date(b.criadoEm).getTime() - new Date(a.criadoEm).getTime();
-    });
-    if (!termo) return ordenada;
-    return ordenada.filter(function (item) {
-      return [item.cep, item.endereco, item.bairro, item.tipo, item.detalhes]
-        .join(" ").toLowerCase().includes(termo);
-    });
-  }
+  const GRAV_LBL = { perigo_extremo: "🔴 Perigo extremo", perigo: "🟠 Perigo", atencao: "🟡 Atenção" };
+  const GRAV_CLS = { perigo_extremo: "gv-ext", perigo: "gv-per", atencao: "gv-ate" };
 
   function renderLista(lista) {
     if (!lista.length) {
       listaEl.innerHTML = '<li class="empty-msg">Nenhuma ocorrência encontrada.</li>';
       return;
     }
-
-    listaEl.innerHTML = lista.map(function (item) {
-      const detalhes  = item.detalhes ? '<div class="card-desc">' + escapeHtml(item.detalhes) + '</div>' : "";
-      const isAuthor  = Boolean(item.emailAutor && user?.emailUser && item.emailAutor === user.emailUser);
-      const cepLabel  = item.cep ? "CEP " + escapeHtml(item.cep) : "CEP não informado";
-      const autorBtns = isAuthor
-        ? '<button class="card-edit" data-id="' + item.id + '">Editar</button>' +
-          '<button class="card-del"  data-id="' + item.id + '">Remover</button>'
-        : "";
-
+    listaEl.innerHTML = lista.map(function (o) {
+      const isAuthor = o.emailAutor && user.emailUser && o.emailAutor === user.emailUser;
+      const cepLbl   = o.cep ? "CEP " + esc(o.cep) : "CEP não informado";
+      const gravCls  = GRAV_CLS[o.gravidade] || "gv-ate";
+      const gravLbl  = GRAV_LBL[o.gravidade] || "🟡 Atenção";
+      const denCnt   = o.denuncias.length;
+      const comCnt   = o.comentarios.length;
+      const autBtns  = (isAuthor || isModerador())
+        ? '<button class="btn-card btn-edit" data-id="' + o.id + '">Editar</button>'
+          + '<button class="btn-card btn-del" data-id="' + o.id + '">Remover</button>' : "";
+      const denBtn   = !isAuthor
+        ? '<button class="btn-card btn-den" data-id="' + o.id + '" title="Denunciar">⚑</button>' : "";
       return (
-        '<li class="occurrence-card" data-id="' + item.id + '">' +
-          '<div class="card-top">' +
-            '<span class="card-emoji">' + escapeHtml(item.emoji) + '</span>' +
-            '<span class="card-categoria">' + escapeHtml(item.tipo) + '</span>' +
-            '<span class="badge-grav atencao">' + cepLabel + '</span>' +
-          '</div>' +
-          '<div class="card-local">📍 ' + escapeHtml(item.endereco) + '</div>' +
-          detalhes +
-          '<div class="card-footer">' +
-            '<span>🕒 ' + escapeHtml(formatarData(item.criadoEm)) + '</span>' +
-            '<div class="card-actions">' + autorBtns + '</div>' +
-          '</div>' +
-        '</li>'
+        '<li class="ocard" data-id="' + o.id + '">'
+          + '<div class="card-top">'
+            + '<span class="card-emoji">' + esc(o.emoji) + '</span>'
+            + '<span class="card-cat">'   + esc(o.tipo)  + '</span>'
+            + '<span class="badge grav ' + gravCls + '">' + gravLbl + '</span>'
+            + '<span class="badge cep">' + cepLbl + '</span>'
+            + (denCnt >= 3 ? '<span class="badge-den">⚑' + denCnt + '</span>' : "")
+          + '</div>'
+          + '<div class="card-loc">📍 ' + esc(o.endereco) + '</div>'
+          + (o.detalhes ? '<div class="card-desc">' + esc(o.detalhes) + '</div>' : "")
+          + (o.midias.length ? '<div class="card-mid">📷 ' + o.midias.length + ' mídia(s)</div>' : "")
+          + '<div class="card-foot">'
+            + '<span>🕒 ' + esc(fmtData(o.criadoEm)) + '</span>'
+            + (o.editadoEm ? '<span class="tag-edit">editado</span>' : "")
+            + '<div class="card-acts">'
+              + '<button class="btn-card btn-com" data-id="' + o.id + '">💬 ' + comCnt + '</button>'
+              + denBtn + autBtns
+            + '</div>'
+          + '</div>'
+          + '<div class="com-area" id="com-' + o.id + '" style="display:none"></div>'
+        + '</li>'
       );
     }).join("");
 
-    listaEl.querySelectorAll(".occurrence-card").forEach(function (card) {
+    listaEl.querySelectorAll(".ocard").forEach(function (card) {
       card.addEventListener("click", function (e) {
-        if (e.target.classList.contains("card-del") || e.target.classList.contains("card-edit")) return;
-        const item = markerById.get(card.dataset.id);
-        if (item) { mapa.flyTo([item.lat, item.lng], 16); item.marker.openPopup(); }
+        if (e.target.closest(".btn-card") || e.target.closest(".com-area")) return;
+        const m = markerById.get(card.dataset.id);
+        if (m) { mapa.flyTo([m.lat, m.lng], 16); m.marker.openPopup(); }
       });
     });
-
-    listaEl.querySelectorAll(".card-del").forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        removerOcorrencia(btn.dataset.id);
-      });
-    });
-
-    listaEl.querySelectorAll(".card-edit").forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        abrirEdicao(btn.dataset.id);
-      });
-    });
+    listaEl.querySelectorAll(".btn-del").forEach(function (b) { b.addEventListener("click", function (e) { e.stopPropagation(); removerOc(b.dataset.id); }); });
+    listaEl.querySelectorAll(".btn-edit").forEach(function (b) { b.addEventListener("click", function (e) { e.stopPropagation(); abrirEdit(b.dataset.id); }); });
+    listaEl.querySelectorAll(".btn-com").forEach(function (b) { b.addEventListener("click", function (e) { e.stopPropagation(); toggleCom(b.dataset.id); }); });
+    listaEl.querySelectorAll(".btn-den").forEach(function (b) { b.addEventListener("click", function (e) { e.stopPropagation(); abrirDen(b.dataset.id); }); });
   }
 
   function renderMarcadores(lista) {
-    markersLayer.clearLayers();
-    markerById.clear();
-    lista.forEach(function (item) {
-      const marker = L.marker([item.lat, item.lng], {
-        icon: criarEmojiIcon(item.emoji)
-      }).bindPopup(criarPopup(item));
-      marker.addTo(markersLayer);
-      markerById.set(item.id, { marker: marker, lat: item.lat, lng: item.lng });
+    markersLayer.clearLayers(); markerById.clear();
+    lista.forEach(function (o) {
+      const pulse = o.gravidade === "perigo_extremo" ? " pulse" : "";
+      const icon = L.divIcon({ html: '<div class="map-icon' + pulse + '">' + esc(o.emoji) + '</div>', className: "", iconSize: [40, 40], iconAnchor: [20, 20] });
+      const m = L.marker([o.lat, o.lng], { icon }).bindPopup(
+        '<div class="popup"><strong>' + esc(o.emoji + " " + o.tipo) + '</strong><br>'
+        + esc(o.endereco) + '<br>'
+        + (o.cep ? "CEP " + esc(o.cep) + "<br>" : "")
+        + (GRAV_LBL[o.gravidade] || "")
+        + (o.detalhes ? "<br><em>" + esc(o.detalhes) + "</em>" : "")
+        + '</div>'
+      );
+      m.addTo(markersLayer);
+      markerById.set(o.id, { marker: m, lat: o.lat, lng: o.lng });
     });
   }
 
-  function criarEmojiIcon(emoji) {
-    return L.divIcon({
-      html: '<div class="map-emoji-icon">' + escapeHtml(emoji) + '</div>',
-      className: "", iconSize: [40, 40], iconAnchor: [20, 20]
+  // ── comentários ────────────────────────────────────────────────────────────
+  function toggleCom(id) {
+    const area = document.getElementById("com-" + id);
+    if (!area) return;
+    if (area.style.display !== "none") { area.style.display = "none"; return; }
+    renderComArea(id, area);
+    area.style.display = "block";
+  }
+
+  function renderComArea(id, area) {
+    const oc = getListaOcorrencias().find(function (o) { return o.id === id; });
+    if (!oc) return;
+    const coms = oc.comentarios || [];
+    area.innerHTML =
+      '<div class="coms-lista">'
+      + (coms.length ? coms.map(function (c) {
+          const del = (c.emailAutor === user.emailUser || isModerador())
+            ? '<button class="com-del" data-oc="' + id + '" data-c="' + c.id + '">✕</button>' : "";
+          return '<div class="com-item"><div class="com-autor">' + esc(c.nomeAutor)
+            + ' <span>' + esc(fmtData(c.criadoEm)) + '</span></div>'
+            + '<div class="com-txt">' + esc(c.texto) + '</div>' + del + '</div>';
+        }).join("") : '<p class="com-vazio">Nenhum comentário ainda.</p>')
+      + '</div>'
+      + '<div class="com-form"><textarea id="ct-' + id + '" placeholder="Comentar... (mín. 3 chars)" rows="2"></textarea>'
+      + '<button class="com-send" data-id="' + id + '">Enviar</button></div>';
+
+    area.querySelectorAll(".com-del").forEach(function (b) {
+      b.addEventListener("click", function () {
+        removerComentario(b.dataset.oc, b.dataset.c);
+        ocorrencias = carregarPersistidas(); renderAll(); renderComArea(id, area);
+      });
+    });
+    area.querySelector(".com-send").addEventListener("click", function () {
+      const ta = document.getElementById("ct-" + id);
+      const txt = ta ? ta.value.trim() : "";
+      if (txt.length < 3) { alert("Mínimo 3 caracteres."); return; }
+      adicionarComentario(id, txt, user);
+      ocorrencias = carregarPersistidas(); renderAll(); renderComArea(id, area);
     });
   }
 
-  function criarPopup(item) {
-    const detalhes = item.detalhes ? '<br><strong>Detalhes:</strong> ' + escapeHtml(item.detalhes) : "";
-    const cepLabel = item.cep ? "CEP " + escapeHtml(item.cep) : "CEP não informado";
-    return (
-      '<div class="popup-card">' +
-        '<strong>' + escapeHtml(item.emoji + " " + item.tipo) + '</strong><br>' +
-        '<span>' + escapeHtml(item.endereco) + '</span><br>' +
-        '<span>' + cepLabel + '</span>' +
-        detalhes +
-      '</div>'
-    );
-  }
+  // ── denúncia ───────────────────────────────────────────────────────────────
+  function abrirDen(id) { $("denId").value = id; denModal.classList.add("vis"); }
+  $("denClose").addEventListener("click",  function () { denModal.classList.remove("vis"); });
+  $("denCancel").addEventListener("click", function () { denModal.classList.remove("vis"); });
+  denModal.addEventListener("click", function (e) { if (e.target === denModal) denModal.classList.remove("vis"); });
+  denForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const mot = $("denMotivo").value;
+    if (!mot) { alert("Selecione o motivo."); return; }
+    const res = denunciarOcorrencia($("denId").value, mot, user.emailUser);
+    if (res === "ja") alert("Você já denunciou esta ocorrência.");
+    else setFbRelato("Denúncia registrada. Obrigado!", "success");
+    denModal.classList.remove("vis");
+  });
 
-  // ── Busca CEP (melhorada: busca pelo CEP direto no Nominatim) ──────────────
+  // ── busca CEP ──────────────────────────────────────────────────────────────
   async function buscarCep() {
     const cep = normalizeCep(cepInput.value);
-    if (!cep) { showBuscaFeedback("Digite um CEP no formato XXXXX-XXX.", "error"); return; }
-    if (!/^\d{5}-\d{3}$/.test(cep)) { showBuscaFeedback("O CEP precisa estar no formato XXXXX-XXX, com hífen.", "error"); return; }
-
+    if (!cep) { setFbBusca("Digite um CEP válido no formato XXXXX-XXX.", "error"); return; }
     buscarCepBtn.disabled = true;
-    showBuscaFeedback("Buscando endereço...", "");
-
+    setFbBusca("Buscando endereço do CEP " + cep + "...", "");
     try {
-      const cepDigits = cep.replace(/\D/g, "");
-      const viaCepRes = await fetch("https://viacep.com.br/ws/" + cepDigits + "/json/");
-      if (!viaCepRes.ok) throw new Error("ViaCEP falhou");
-      const viaCepData = await viaCepRes.json();
-      if (viaCepData.erro) { showBuscaFeedback("CEP não encontrado. Verifique e tente novamente.", "error"); return; }
+      const vr = await fetch("https://viacep.com.br/ws/" + cep.replace(/\D/g, "") + "/json/");
+      if (!vr.ok) throw new Error("viacep falhou");
+      const vd = await vr.json();
+      if (vd.erro) { setFbBusca("CEP " + cep + " não encontrado. Verifique e tente novamente.", "error"); return; }
 
-      const cidade  = viaCepData.localidade || "";
-      const estado  = viaCepData.uf || "";
-      const bairro  = viaCepData.bairro || "";
-      const logradouro = viaCepData.logradouro || "";
-      const endereco = [logradouro, bairro, cidade, estado]
-        .map(function (p) { return String(p || "").trim(); })
-        .filter(Boolean).join(", ");
+      const cidade = vd.localidade || "", estado = vd.uf || "", bairro = vd.bairro || "", log = vd.logradouro || "";
+      const end = [log, bairro, cidade, estado].filter(Boolean).join(", ");
 
-      // Estratégia 1: buscar pelo CEP diretamente
-      let geoData = await fetchGeocode("postalcode=" + cepDigits + "&countrycodes=br");
+      let geo = await fetchGeo("postalcode=" + cep.replace(/\D/g, "") + "&countrycodes=br");
+      if (!geo.length && cidade) geo = await fetchGeo("city=" + encodeURIComponent(cidade) + "&state=" + encodeURIComponent(estado) + "&country=br");
+      if (!geo.length) geo = await fetchGeo("q=" + encodeURIComponent((log || cidade) + ", " + estado + ", Brasil"));
+      if (!geo.length) { setFbBusca("CEP encontrado mas não localizou no mapa. Tente clicar no mapa.", "error"); return; }
 
-      // Estratégia 2: buscar pela cidade + estado se não encontrou pelo CEP
-      if (!geoData.length && cidade && estado) {
-        geoData = await fetchGeocode("city=" + encodeURIComponent(cidade) + "&state=" + encodeURIComponent(estado) + "&country=br");
-      }
-
-      // Estratégia 3: busca textual por logradouro + cidade
-      if (!geoData.length) {
-        const q = encodeURIComponent((logradouro || cidade) + ", " + estado + ", Brasil");
-        geoData = await fetchGeocode("q=" + q);
-      }
-
-      if (!geoData.length) {
-        showBuscaFeedback("CEP encontrado, mas não foi possível localizar no mapa. Tente clicar diretamente no mapa.", "error");
-        return;
-      }
-
-      const ponto = geoData[0];
-      selecionarLocal({
-        origem: "cep", cep: cep, endereco: endereco,
-        bairro: bairro, cidade: cidade, estado: estado,
-        lat: Number(ponto.lat), lng: Number(ponto.lon)
-      });
-
-      mostrarEnderecoSelecionado("CEP " + cep + " • " + endereco);
-      abrirFormularioRelato();
-      showBuscaFeedback("CEP localizado no mapa. Selecione o emoji e detalhe a ocorrência.", "success");
-
+      const pt = geo[0];
+      colocarPin({ origem: "cep", cep, endereco: end, bairro, cidade, estado, lat: +pt.lat, lng: +pt.lon });
+      setLocInfo("📍 CEP " + cep + " · " + end, true);
+      setFbBusca("✅ CEP localizado! Preencha o tipo e clique em Relatar.", "success");
     } catch (_) {
-      showBuscaFeedback("Erro ao consultar o CEP. Tente novamente.", "error");
+      setFbBusca("Erro ao consultar o CEP. Verifique a conexão e tente novamente.", "error");
     } finally {
       buscarCepBtn.disabled = false;
     }
   }
 
-  async function fetchGeocode(params) {
-    const url = "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&" + params;
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!res.ok) return [];
-    return await res.json();
+  async function fetchGeo(params) {
+    const r = await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&" + params, { headers: { Accept: "application/json" } });
+    if (!r.ok) return [];
+    return await r.json();
   }
 
-  // ── Salvar ocorrência ──────────────────────────────────────────────────────
+  // ── salvar ocorrência ──────────────────────────────────────────────────────
   function salvarOcorrencia() {
-    if (!selectedLocation) {
-      showRelatoFeedback("Selecione um CEP ou clique no mapa antes de relatar.", "error");
+    if (!selLoc) {
+      setFbRelato("⚠️ Selecione o local primeiro: clique no mapa ou busque um CEP.", "error");
       return;
     }
-    const emoji = emojiSelect.value.trim();
-    if (!emoji) { showRelatoFeedback("Selecione um emoji para a ocorrência.", "error"); return; }
+    const emoji = emojiSel.value.trim();
+    if (!emoji) { setFbRelato("⚠️ Selecione o tipo da ocorrência.", "error"); return; }
 
-    const novaOcorrencia = {
+    const det = detalheIn.value.trim();
+    if (det.length > 0 && det.length < 20) {
+      setFbRelato("⚠️ A descrição precisa ter pelo menos 20 caracteres (ou deixe o campo vazio).", "error");
+      return;
+    }
+
+    const nova = {
       id: createUniqueId(),
-      cep: selectedLocation.cep || "",
-      endereco: selectedLocation.endereco,
-      bairro: selectedLocation.bairro || selectedLocation.cidade || "",
-      cidade: selectedLocation.cidade || "",
-      estado: selectedLocation.estado || "",
-      lat: Number(selectedLocation.lat),
-      lng: Number(selectedLocation.lng),
-      emoji: emoji,
-      tipo: getTipoFromEmoji(emoji),
-      detalhes: detalheInput.value.trim(),
-      origem: selectedLocation.origem,
-      nomeAutor: user?.nomeUser || "morador",
-      emailAutor: user?.emailUser || "",
-      criadoEm: new Date().toISOString()
+      cep: selLoc.cep || "",
+      endereco: selLoc.endereco,
+      bairro: selLoc.bairro || "",
+      cidade: selLoc.cidade || "",
+      estado: selLoc.estado || "",
+      lat: +selLoc.lat,
+      lng: +selLoc.lng,
+      emoji,
+      tipo: tipoDeEmoji(emoji),
+      detalhes: det,
+      gravidade: gravSel.value || "atencao",
+      midias: midiaFiles.map(function (f) { return { nome: f.name, tipo: f.type }; }),
+      origem: selLoc.origem,
+      nomeAutor: user.nomeUser || "morador",
+      emailAutor: user.emailUser || "",
+      criadoEm: new Date().toISOString(),
+      editadoEm: null,
+      comentarios: [],
+      denuncias: []
     };
 
-    ocorrencias = saveListaOcorrencias([].concat(getListaOcorrencias(), novaOcorrencia));
+    ocorrencias = saveListaOcorrencias([].concat(getListaOcorrencias(), nova));
     renderAll();
-    limparSelecao(true);
-    showRelatoFeedback("Ocorrência salva e exibida no mapa.", "success");
+    limparSel();
+    midiaFiles = []; renderMidias();
+    setFbRelato("✅ Ocorrência salva e exibida no mapa!", "success");
   }
 
-  function removerOcorrencia(id) {
-    const listaAtual = getListaOcorrencias();
-    if (!listaAtual.find(function (o) { return o.id === id; })) return;
-    if (!confirm("Deseja remover esta ocorrência?")) return;
-    ocorrencias = saveListaOcorrencias(listaAtual.filter(function (o) { return o.id !== id; }));
-    renderAll();
-    showRelatoFeedback("Ocorrência removida.", "success");
+  function removerOc(id) {
+    if (!confirm("Remover esta ocorrência?")) return;
+    if (isModerador()) registrarLog("remocao_mod", { id, por: user.emailUser });
+    ocorrencias = saveListaOcorrencias(getListaOcorrencias().filter(function (o) { return o.id !== id; }));
+    renderAll(); setFbRelato("Ocorrência removida.", "success");
   }
 
-  // ── Edição de ocorrência ───────────────────────────────────────────────────
-  function abrirEdicao(id) {
-    const listaAtual = getListaOcorrencias();
-    const item = listaAtual.find(function (o) { return o.id === id; });
-    if (!item) return;
-
-    editIdInput.value      = item.id;
-    editEmoji.value        = item.emoji;
-    editDetalhe.value      = item.detalhes || "";
-    editEndereco.value     = item.endereco || "";
-
-    editModal.classList.add("visible");
+  // ── edição (limite 1h para autor) ──────────────────────────────────────────
+  function abrirEdit(id) {
+    const o = getListaOcorrencias().find(function (x) { return x.id === id; });
+    if (!o) return;
+    if (!isModerador() && o.emailAutor === user.emailUser) {
+      if ((Date.now() - new Date(o.criadoEm).getTime()) / 60000 > 60) {
+        alert("Edição permitida somente até 1 hora após a publicação."); return;
+      }
+    }
+    $("editId").value       = o.id;
+    $("editEmoji").value    = o.emoji;
+    $("editGravidade").value= o.gravidade || "atencao";
+    $("editEndereco").value = o.endereco  || "";
+    $("editDetalhe").value  = o.detalhes  || "";
+    editModal.classList.add("vis");
   }
 
-  function fecharEdicao() {
-    editModal.classList.remove("visible");
-  }
+  function fecharEdit() { editModal.classList.remove("vis"); }
+  $("editClose").addEventListener("click",  fecharEdit);
+  $("editCancel").addEventListener("click", fecharEdit);
+  editModal.addEventListener("click", function (e) { if (e.target === editModal) fecharEdit(); });
 
-  if (editModalClose) editModalClose.addEventListener("click", fecharEdicao);
-
-  if (editModal) {
-    editModal.addEventListener("click", function (e) {
-      if (e.target === editModal) fecharEdicao();
+  editForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const id    = $("editId").value;
+    const emoji = $("editEmoji").value.trim();
+    if (!emoji) { alert("Selecione o tipo."); return; }
+    const det = $("editDetalhe").value.trim();
+    if (det.length > 0 && det.length < 20) { alert("Descrição: mínimo 20 caracteres ou deixe em branco."); return; }
+    const lista = getListaOcorrencias();
+    const idx   = lista.findIndex(function (o) { return o.id === id; });
+    if (idx === -1) return;
+    lista[idx] = Object.assign({}, lista[idx], {
+      emoji,
+      tipo:      tipoDeEmoji(emoji),
+      gravidade: $("editGravidade").value,
+      detalhes:  det,
+      endereco:  $("editEndereco").value.trim() || lista[idx].endereco,
+      editadoEm: new Date().toISOString()
     });
+    ocorrencias = saveListaOcorrencias(lista);
+    renderAll(); fecharEdit(); setFbRelato("Ocorrência atualizada.", "success");
+  });
+
+  // ── helpers ────────────────────────────────────────────────────────────────
+  function colocarPin(loc) {
+    selLoc = loc;
+    if (selMark) selLayer.removeLayer(selMark);
+    selMark = L.marker([loc.lat, loc.lng], {
+      icon: L.divIcon({ html: '<div class="sel-pin">📌</div>', className: "", iconSize: [36, 36], iconAnchor: [18, 18] })
+    }).addTo(selLayer);
+    mapa.setView([loc.lat, loc.lng], 16);
   }
 
-  if (editForm) {
-    editForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const id = editIdInput.value;
-      const listaAtual = getListaOcorrencias();
-      const idx = listaAtual.findIndex(function (o) { return o.id === id; });
-      if (idx === -1) return;
-
-      const emoji = editEmoji.value.trim();
-      if (!emoji) { alert("Selecione um emoji."); return; }
-
-      listaAtual[idx] = Object.assign({}, listaAtual[idx], {
-        emoji:    emoji,
-        tipo:     getTipoFromEmoji(emoji),
-        detalhes: editDetalhe.value.trim(),
-        endereco: editEndereco.value.trim() || listaAtual[idx].endereco
-      });
-
-      ocorrencias = saveListaOcorrencias(listaAtual);
-      renderAll();
-      fecharEdicao();
-      showRelatoFeedback("Ocorrência atualizada.", "success");
-    });
+  function setLocInfo(txt, selecionado) {
+    if (!locSel || !locTexto) return;
+    locTexto.textContent = txt;
+    locSel.className = "loc-box " + (selecionado ? "loc-selecionado" : "loc-vazio");
   }
 
-  // ── Helpers de seleção ─────────────────────────────────────────────────────
-  function selecionarLocal(local) {
-    selectedLocation = local;
-    if (selectedMarker) selectionLayer.removeLayer(selectedMarker);
-    selectedMarker = L.marker([local.lat, local.lng], {
-      icon: L.divIcon({
-        html: '<div class="selection-pin">📌</div>',
-        className: "", iconSize: [36, 36], iconAnchor: [18, 18]
-      })
-    }).addTo(selectionLayer);
-    mapa.setView([local.lat, local.lng], 16);
+  function limparSel() {
+    selLoc = null;
+    emojiSel.value  = "";
+    gravSel.value   = "atencao";
+    detalheIn.value = "";
+    cepInput.value  = "";
+    fbBusca.textContent = "";
+    setLocInfo("📍 Nenhum local selecionado — clique no mapa ou busque um CEP abaixo", false);
+    if (selMark) { selLayer.removeLayer(selMark); selMark = null; }
   }
 
-  function abrirFormularioRelato() { formOcorrencia.classList.add("visible"); }
-
-  function mostrarEnderecoSelecionado(texto) {
-    enderecoTexto.textContent = texto;
-    enderecoBox.classList.add("visible");
-  }
-
-  function limparSelecao(silent) {
-    selectedLocation = null;
-    emojiSelect.value = "";
-    detalheInput.value = "";
-    cepInput.value = "";
-    formOcorrencia.classList.remove("visible");
-    enderecoBox.classList.remove("visible");
-    feedbackBusca.textContent = "";
-    if (selectedMarker) { selectionLayer.removeLayer(selectedMarker); selectedMarker = null; }
-    if (!silent) showRelatoFeedback("Seleção limpa. Busque um CEP ou clique no mapa para começar.", "success");
-  }
-
-  // ── Persistência ───────────────────────────────────────────────────────────
-  function carregarOcorrenciasPersistidas() {
-    const raw = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
+  function carregarPersistidas() {
+    const raw  = JSON.parse(localStorage.getItem("ocorrencias") || "[]");
     const norm = normalizeListaOcorrencias(raw);
     if (norm.length !== raw.length) localStorage.setItem("ocorrencias", JSON.stringify(norm));
     return norm;
   }
 
-  function normalizeListaOcorrencias(lista) {
-    if (!Array.isArray(lista)) return [];
-    const seen = new Set();
-    return lista.map(normalizeOcorrencia).filter(function (item) {
-      if (!item || seen.has(item.id)) return false;
-      seen.add(item.id); return true;
-    });
-  }
-
-  // ── Helpers puros ──────────────────────────────────────────────────────────
-  function formatCep(value) {
-    const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
-    return digits.length <= 5 ? digits : digits.slice(0, 5) + "-" + digits.slice(5);
-  }
-
-  function normalizeCep(value) { return formatCep(value); }
-
-  function formatarData(iso) {
-    const date = new Date(iso);
-    return date.toLocaleDateString("pt-BR") + " às " +
-      date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-  }
-
-  function getTipoFromEmoji(emoji) {
-    const lookup = {
-      "🚨": "Assalto/roubo", "💡": "Iluminação apagada",
-      "🔊": "Som alto/barulho", "🚫": "Vandalismo/dano",
-      "⚠️": "Assédio", "📍": "Outro problema"
-    };
-    return lookup[emoji] || "Ocorrência";
-  }
-
-  function showBuscaFeedback(text, kind) {
-    feedbackBusca.textContent = text;
-    feedbackBusca.className = "feedback" + (kind ? " " + kind : "");
-  }
-
-  function showRelatoFeedback(text, kind) {
-    feedbackRelato.textContent = text;
-    feedbackRelato.className = "feedback" + (kind ? " " + kind : "");
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
+  function fmtCep(v)  { const d = String(v || "").replace(/\D/g, "").slice(0, 8); return d.length <= 5 ? d : d.slice(0, 5) + "-" + d.slice(5); }
+  function fmtData(iso) { const d = new Date(iso); return d.toLocaleDateString("pt-BR") + " às " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }); }
+  function tipoDeEmoji(e) { return { "🚨":"Assalto/roubo","💡":"Iluminação apagada","🔊":"Som alto/barulho","🚫":"Vandalismo/dano","⚠️":"Assédio","📍":"Outro problema" }[e] || "Ocorrência"; }
+  function setFbBusca(t, k)  { fbBusca.textContent  = t; fbBusca.className  = "feedback" + (k ? " " + k : ""); }
+  function setFbRelato(t, k) { fbRelato.textContent = t; fbRelato.className = "feedback" + (k ? " " + k : ""); }
+  function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }
 })();

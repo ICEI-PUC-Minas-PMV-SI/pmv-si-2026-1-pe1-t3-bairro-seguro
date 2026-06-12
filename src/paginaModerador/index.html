@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bairro Seguro | Moderação</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/sidebar.css">
+  <style>
+    .topbar { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(14,18,37,0.95); }
+    .topbar h1 { margin:0; color:var(--brand); font-size:1.2rem; }
+    .content { max-width:1100px; margin:0 auto; padding:22px; display:grid; gap:20px; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; }
+    .stat { background:rgba(23,29,53,0.9); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:16px; text-align:center; }
+    .stat-n { font-size:1.9rem; font-weight:800; color:#47c661; }
+    .stat-l { font-size:11px; color:var(--muted); margin-top:3px; }
+    .tabs { display:flex; gap:6px; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .tab { border:none; border-radius:10px 10px 0 0; padding:9px 18px; background:rgba(255,255,255,0.04); color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; font-family:inherit; }
+    .tab.on { color:#47c661; border-bottom-color:#47c661; background:rgba(71,198,97,0.07); }
+    .tabp { display:none; }
+    .tabp.on { display:block; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    th { background:rgba(14,18,37,0.9); color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; padding:9px 12px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.07); }
+    td { padding:11px 12px; font-size:13px; color:var(--text); border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; }
+    tr:hover td { background:rgba(255,255,255,0.02); }
+    .bmod { background:rgba(71,198,97,0.2); color:#47c661; border-radius:999px; padding:2px 9px; font-size:11px; font-weight:700; }
+    .bmor { background:rgba(255,255,255,0.07); color:var(--muted); border-radius:999px; padding:2px 9px; font-size:11px; }
+    .bban { background:rgba(218,59,59,0.25); color:#ff8a8a; border-radius:999px; padding:2px 9px; font-size:11px; }
+    .bden { background:rgba(180,0,0,0.3); color:#ffcece; border-radius:999px; padding:2px 9px; font-size:11px; font-weight:700; }
+    .bsm { border:none; border-radius:8px; padding:5px 11px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
+    .b-ban  { background:rgba(180,40,40,0.3); color:#ff8a8a; }
+    .b-unban{ background:rgba(30,120,50,0.3); color:#9fe8b2; }
+    .b-del  { background:rgba(180,40,40,0.3); color:#ff8a8a; }
+    .b-ban:hover,.b-del:hover { background:rgba(180,40,40,0.5); }
+    .b-unban:hover { background:rgba(30,120,50,0.5); }
+    .log-a { display:inline-block; border-radius:999px; padding:2px 9px; font-size:11px; font-weight:700; }
+    .log-banimento { background:rgba(180,0,0,0.25); color:#ff9999; }
+    .log-desbanimento { background:rgba(30,120,50,0.25); color:#9fe8b2; }
+    .log-denuncia { background:rgba(160,80,0,0.25); color:#ffc87a; }
+    .log-remocao_mod { background:rgba(100,0,180,0.25); color:#c8a0ff; }
+    .empty { text-align:center; color:var(--muted); padding:28px 0; font-size:13px; }
+    /* modal */
+    .mo { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+    .mo.vis { display:flex; }
+    .mb { background:linear-gradient(180deg,#171c33,#14192d); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:24px; width:min(92vw,400px); }
+    .mh { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .mh h2 { font-size:1.05rem; color:#f4f6ff; margin:0; }
+    .mx { background:rgba(255,255,255,0.08); border:none; border-radius:50%; width:26px; height:26px; color:#fff; cursor:pointer; }
+    .mf { display:grid; gap:10px; }
+    .ml { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.3px; }
+    .mi { width:100%; height:42px; background:rgba(18,30,24,0.85); border:1px solid rgba(255,255,255,0.08); border-radius:9px; color:#ebf4eb; padding:0 11px; font-size:14px; font-family:inherit; appearance:none; }
+    .mi:focus { outline:none; border-color:#47c661; }
+    .mbs { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .mbok { border:none; border-radius:9px; padding:11px; font-weight:700; color:#fff; background:#9b1c1c; cursor:pointer; font-family:inherit; }
+    .mbca { border:none; border-radius:9px; padding:11px; font-weight:700; color:#fff; background:#7a4343; cursor:pointer; font-family:inherit; }
+  </style>
+</head>
+<body class="app-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-mark" aria-hidden="true"></div></div>
+    <nav class="sidebar-nav">
+      <a href="../paginaHome/index.html" class="sidebar-item" data-page="paginaHome" title="Início">
+        <i class="fa-solid fa-house"></i><span>Início</span>
+      </a>
+      <a href="../pagina-perfil/index.html" class="sidebar-item" data-page="pagina-perfil" title="Perfil">
+        <span id="sidebarAvatar" style="font-size:20px;line-height:1">👤</span>
+        <span id="sidebarNome">Perfil</span>
+      </a>
+      <a href="../paginaConfiguracoes/index.html" class="sidebar-item" data-page="paginaConfiguracoes" title="Configurações">
+        <i class="fa-solid fa-gear"></i><span>Config</span>
+      </a>
+      <a href="../paginaModerador/index.html" class="sidebar-item ativo" data-page="paginaModerador" id="linkModerador" title="Moderação">
+        <i class="fa-solid fa-shield-halved"></i><span>Mod</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="sidebarLogout" title="Sair">
+        <i class="fa-solid fa-right-from-bracket"></i><span>Sair</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="sidebar-content">
+    <header class="topbar"><h1>🛡️ Moderação</h1><span id="modUser" style="font-size:13px;color:var(--muted)"></span></header>
+    <div class="content">
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="sOc">0</div><div class="stat-l">Ocorrências</div></div>
+        <div class="stat"><div class="stat-n" id="sUs">0</div><div class="stat-l">Usuários</div></div>
+        <div class="stat"><div class="stat-n" id="sDen">0</div><div class="stat-l">Denúncias</div></div>
+        <div class="stat"><div class="stat-n" id="sBan">0</div><div class="stat-l">Banidos</div></div>
+        <div class="stat"><div class="stat-n" id="sCom">0</div><div class="stat-l">Comentários</div></div>
+      </div>
+      <div>
+        <div class="tabs">
+          <button class="tab on" data-t="oc">Ocorrências</button>
+          <button class="tab" data-t="den">Denúncias</button>
+          <button class="tab" data-t="us">Usuários</button>
+          <button class="tab" data-t="log">Logs</button>
+        </div>
+        <div class="tabp on" id="tab-oc"><table><thead><tr><th>Tipo</th><th>Endereço</th><th>Gravidade</th><th>Autor</th><th>Denúncias</th><th>Data</th><th>Ação</th></tr></thead><tbody id="bOc"></tbody></table></div>
+        <div class="tabp"    id="tab-den"><table><thead><tr><th>Ocorrência</th><th>Motivo</th><th>Denunciante</th><th>Data</th><th>Ação</th></tr></thead><tbody id="bDen"></tbody></table></div>
+        <div class="tabp"    id="tab-us"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Papel</th><th>Status</th><th>Cadastro</th><th>Ações</th></tr></thead><tbody id="bUs"></tbody></table></div>
+        <div class="tabp"    id="tab-log"><table><thead><tr><th>Ação</th><th>Detalhes</th><th>Data</th></tr></thead><tbody id="bLog"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal ban -->
+  <div class="mo" id="banMo">
+    <div class="mb">
+      <div class="mh"><h2>Banir usuário</h2><button class="mx" id="banClose">✕</button></div>
+      <form class="mf" id="banForm">
+        <input type="hidden" id="banEmail">
+        <label class="ml">Duração</label>
+        <select class="mi" id="banDur">
+          <option value="24">24 horas</option><option value="72">3 dias</option>
+          <option value="168">7 dias</option><option value="720">30 dias</option>
+          <option value="0">Permanente</option>
+        </select>
+        <label class="ml">Motivo</label>
+        <input class="mi" id="banMotivo" type="text" placeholder="Motivo do banimento">
+        <div class="mbs">
+          <button type="submit" class="mbok">Confirmar</button>
+          <button type="button" class="mbca" id="banCancel">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/utils.js"></script>
+  <script src="../assets/sidebar.js"></script>
+  <script>
+  (function(){
+    if (!isAuthenticated()||!isModerador()) { location.href="../paginaHome/index.html"; return; }
+    const user = getUserLogado();
+    document.getElementById("modUser").textContent = "Moderador: "+(user.nomeUser||user.emailUser);
+
+    function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+    function fd(iso){ const d=new Date(iso); return d.toLocaleDateString("pt-BR")+" "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}); }
+    const GL={ perigo_extremo:"🔴 Extremo", perigo:"🟠 Perigo", atencao:"🟡 Atenção" };
+
+    document.querySelectorAll(".tab").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        document.querySelectorAll(".tab").forEach(function(b){ b.classList.remove("on"); });
+        document.querySelectorAll(".tabp").forEach(function(p){ p.classList.remove("on"); });
+        btn.classList.add("on");
+        document.getElementById("tab-"+btn.dataset.t).classList.add("on");
+      });
+    });
+
+    function render(){
+      const ocs=getListaOcorrencias(), us=getListaUser(), logs=getLogsModeracao();
+      const totalDen=ocs.reduce(function(s,o){return s+o.denuncias.length;},0);
+      const totalCom=ocs.reduce(function(s,o){return s+o.comentarios.length;},0);
+      const banidos=us.filter(function(u){return verificarBanimento(u);}).length;
+      document.getElementById("sOc").textContent=ocs.length;
+      document.getElementById("sUs").textContent=us.length;
+      document.getElementById("sDen").textContent=totalDen;
+      document.getElementById("sBan").textContent=banidos;
+      document.getElementById("sCom").textContent=totalCom;
+
+      // Ocorrências
+      document.getElementById("bOc").innerHTML = !ocs.length ? '<tr><td colspan="7" class="empty">Nenhuma.</td></tr>'
+        : ocs.map(function(o){ const dc=o.denuncias.length;
+            return '<tr><td>'+esc(o.emoji+" "+o.tipo)+'</td><td>'+esc(o.endereco)+'</td>'
+              +'<td>'+(GL[o.gravidade]||"🟡 Atenção")+'</td><td>'+esc(o.nomeAutor)+'</td>'
+              +'<td>'+(dc>0?'<span class="bden">⚑'+dc+'</span>':'0')+'</td><td>'+esc(fd(o.criadoEm))+'</td>'
+              +'<td><button class="bsm b-del" onclick="delOc(\''+o.id+'\')">Remover</button></td></tr>';
+          }).join("");
+
+      // Denúncias
+      const denRows=[];
+      ocs.forEach(function(o){ o.denuncias.forEach(function(d){
+        denRows.push('<tr><td>'+esc(o.emoji+" "+o.tipo+" — "+o.endereco)+'</td><td>'+esc(d.motivo)+'</td><td>'+esc(d.emailDenunciante)+'</td><td>'+esc(fd(d.criadoEm))+'</td><td><button class="bsm b-del" onclick="delOc(\''+o.id+'\')">Remover post</button></td></tr>');
+      }); });
+      document.getElementById("bDen").innerHTML = !denRows.length ? '<tr><td colspan="5" class="empty">Nenhuma denúncia.</td></tr>' : denRows.join("");
+
+      // Usuários
+      document.getElementById("bUs").innerHTML = !us.length ? '<tr><td colspan="6" class="empty">Nenhum usuário.</td></tr>'
+        : us.map(function(u){
+            const ban=verificarBanimento(u);
+            const rb=u.role==="moderador"?'<span class="bmod">Moderador</span>':'<span class="bmor">Morador</span>';
+            const sb=ban?'<span class="bban">Banido</span>':'<span style="color:#9fe8b2;font-size:11px">Ativo</span>';
+            const ac=u.emailUser!==user.emailUser
+              ?(ban?'<button class="bsm b-unban" onclick="doUnban(\''+esc(u.emailUser)+'\')">Desbanir</button>'
+                   :'<button class="bsm b-ban"   onclick="doBan(\''+esc(u.emailUser)+'\')">Banir</button>')
+              :'<span style="font-size:11px;color:var(--muted)">você</span>';
+            return '<tr><td>'+esc(u.nomeUser)+'</td><td>'+esc(u.emailUser)+'</td><td>'+rb+'</td><td>'+sb+'</td><td>'+esc(fd(u.dataCadastro))+'</td><td>'+ac+'</td></tr>';
+          }).join("");
+
+      // Logs
+      document.getElementById("bLog").innerHTML = !logs.length ? '<tr><td colspan="3" class="empty">Nenhum log.</td></tr>'
+        : logs.map(function(l){ return '<tr><td><span class="log-a log-'+esc(l.acao)+'">'+esc(l.acao)+'</span></td><td>'+esc(JSON.stringify(l.dados||{}).replace(/[{}"]/g,""))+'</td><td>'+esc(fd(l.criadoEm))+'</td></tr>'; }).join("");
+    }
+
+    window.delOc = function(id){ if(!confirm("Remover?")) return; saveListaOcorrencias(getListaOcorrencias().filter(function(o){return o.id!==id;})); registrarLog("remocao_mod",{id,por:user.emailUser}); render(); };
+    window.doBan = function(email){ document.getElementById("banEmail").value=email; document.getElementById("banMo").classList.add("vis"); };
+    window.doUnban=function(email){ if(!confirm("Desbanir "+email+"?")) return; desbanirUsuario(email,user.emailUser); render(); };
+
+    document.getElementById("banClose").addEventListener("click",  function(){ document.getElementById("banMo").classList.remove("vis"); });
+    document.getElementById("banCancel").addEventListener("click", function(){ document.getElementById("banMo").classList.remove("vis"); });
+    document.getElementById("banForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const email=document.getElementById("banEmail").value;
+      const dur=+document.getElementById("banDur").value;
+      const mot=document.getElementById("banMotivo").value.trim();
+      if(!mot){ alert("Informe o motivo."); return; }
+      banirUsuario(email,dur,mot,user.emailUser);
+      document.getElementById("banMo").classList.remove("vis");
+      render();
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>

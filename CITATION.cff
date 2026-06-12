@@ -8,9 +8,9 @@ message: >-
   Web da PUC Minas.
 type: software
 authors:
-  - given-names: Aluno 1
-    family-names: Nome Completo
-    email: aluno@pucminas.br
+  - given-names: Fernando
+    family-names: Fernando P. Barbosa Souza
+    email: fernando.souza@sga.pucminas.br
     affiliation: PUC Minas
   - given-names: Hugo
     name-particle: 'B '

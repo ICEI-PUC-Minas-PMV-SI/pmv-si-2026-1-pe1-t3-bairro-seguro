@@ -1,0 +1,64 @@
+/* sidebar.css — componente lateral compartilhado entre todas as páginas */
+.app-layout { display:flex; min-height:100vh; }
+
+.sidebar {
+  width:80px; background:#0e1225;
+  border-right:1px solid rgba(255,255,255,0.06);
+  display:flex; flex-direction:column; align-items:center;
+  flex-shrink:0; position:sticky; top:0; height:100vh; z-index:100;
+}
+.sidebar-logo {
+  width:100%; padding:18px 10px 16px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex; align-items:center; justify-content:center;
+}
+.sidebar-logo-mark {
+  width:26px; height:50px;
+  background:no-repeat center/contain;
+  background-image:url("data:image/svg+xml,%3Csvg width='50' height='97' viewBox='0 0 50 97' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M1.09473 0.552635C2.18923 -0.347391 3.84604 -0.0213969 7.15918 0.63076L46.7725 8.42861C48.3169 8.73262 49.0897 8.88393 49.5449 9.4374C50.0001 9.99094 50 10.7784 50 12.3524V84.5097C50 86.0838 50.0001 86.8711 49.5449 87.4247C49.0897 87.9783 48.3171 88.1304 46.7725 88.4345L7.15918 96.2313C3.84633 96.8834 2.18923 97.2102 1.09473 96.3104C0.000217438 95.4104 0 93.7214 0 90.3446V49.4335H26.7461L13.4424 70.2636L15.1279 71.3397L29.4141 48.9716L29.7578 48.4335L29.4141 47.8954L15.1279 25.5272L13.4424 26.6034L26.7461 47.4335H0V6.51748C0 3.14087 0.000242547 1.45268 1.09473 0.552635Z' fill='%23126315'/%3E%3C/svg%3E");
+}
+.sidebar-nav {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; gap:2px; padding:16px 0; width:100%;
+}
+.sidebar-item {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:4px; width:64px; height:58px; border-radius:12px;
+  text-decoration:none; color:#7a8099; font-size:10px; font-weight:600;
+  transition:background .18s,color .18s; cursor:pointer;
+  border:none; background:transparent; padding:0; font-family:inherit;
+}
+.sidebar-item i    { font-size:19px; line-height:1; }
+.sidebar-item:hover{ background:rgba(255,255,255,0.07); color:#e0e4f4; }
+.sidebar-item.ativo{ background:rgba(18,99,21,0.25); color:#47c661; }
+.sidebar-item.ativo i { color:#47c661; }
+
+.sidebar-footer {
+  padding:14px 0 18px; display:flex; flex-direction:column;
+  align-items:center; width:100%; border-top:1px solid rgba(255,255,255,0.05);
+}
+.sidebar-logout {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  width:64px; height:58px; border-radius:12px; border:none; background:transparent;
+  color:#7a8099; font-size:10px; font-weight:600; cursor:pointer;
+  font-family:inherit; transition:background .18s,color .18s; justify-content:center;
+}
+.sidebar-logout i    { font-size:19px; }
+.sidebar-logout:hover{ background:rgba(218,59,59,0.15); color:#ff8a8a; }
+
+.sidebar-content { flex:1; min-width:0; overflow-x:hidden; }
+
+@media (max-width:640px) {
+  .app-layout { flex-direction:column; }
+  .sidebar {
+    width:100%; height:60px; flex-direction:row;
+    position:fixed; bottom:0; left:0; top:auto;
+    border-right:none; border-top:1px solid rgba(255,255,255,0.06);
+    padding:0 4px; z-index:200;
+  }
+  .sidebar-logo  { display:none; }
+  .sidebar-footer{ flex-direction:row; border-top:none; padding:0; }
+  .sidebar-nav   { flex-direction:row; padding:0; gap:0; justify-content:space-around; }
+  .sidebar-item, .sidebar-logout { width:auto; height:56px; flex:1; border-radius:0; font-size:9px; }
+  .sidebar-content { padding-bottom:68px; }
+}
