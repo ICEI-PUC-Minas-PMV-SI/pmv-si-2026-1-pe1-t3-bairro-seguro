@@ -8,6 +8,7 @@ message: >-
   Web da PUC Minas.
 type: software
 authors:
+    //alunos
   - given-names: Fernando
     family-names: Fernando P. Barbosa Souza
     email: fernando.souza@sga.pucminas.br
@@ -18,7 +19,11 @@ authors:
     name-suffix: Prof.
     email: hugo@pucminas.br
     affiliation: PUC Minas
-    orcid: 'https://orcid.org/0000-0002-6193-3205'
+    //professor
+    given-names: Clóvis
+    family-names: Clóvis Lemos Tavares
+    email: clovis.tavares@pucminas.br
+    affiliation: PUC Minas
 repository-code: >-
   https://github.com/ICEI-PUC-Minas-PMV-SI/WebApplicationProject-Template
 abstract: >-
