@@ -1,148 +1,364 @@
-BAIRRO SEGURO
-Avaliação da Solução — Planos de Teste
+# Testes
 
+Neste projeto serão realizados dois tipos de testes:
 
-Plano de Testes de Software
-O plano de testes de software identifica os casos de teste a serem executados pela equipe, apontando as funcionalidades, as operações e os resultados esperados. Os testes abaixo cobrem os principais requisitos funcionais do Bairro Seguro, utilizando a técnica de Caixa Preta (verificação de entradas e saídas) e Caixa Branca (verificação de lógica interna) conforme descrito no material de apoio da disciplina.
+ - O **Teste de Software**, que utiliza uma abordagem de caixa preta, e tem por objetivo verificar a conformidade do software com os requisitos funcionais e não funcionais do sistema.
+ - O **Teste de Usabilidade**, que busca avaliar a qualidade do uso do sistema por um usuário do público alvo. 
 
-Tipos de Teste utilizados
-Caixa Preta (Black-box): testa o comportamento externo da funcionalidade — a entrada fornecida e o resultado produzido — sem conhecimento da implementação interna. Aplicado nos casos de cadastro, login e registro de ocorrências.
-Caixa Branca (White-box): testa a lógica interna do código. Aplicado no caso de logout, verificando diretamente se as chaves do localStorage são removidas corretamente.
+Se quiser conhecer um pouco mais sobre os tipos de teste de software, leia o documento [Teste de Software: Conceitos e tipos de testes](https://blog.onedaytesting.com.br/teste-de-software/).
 
-Casos de Teste
+A documentação dos testes é dividida nas seguintes seções:
 
-Caso de Teste: CT-01
-Funcionalidade	Cadastro de Usuário (RF-01, RF-16)
-Tipo de Teste	Caixa Preta — Caso Válido
-Pré-condição	Nenhum usuário cadastrado com o e-mail informado
-Passos	1. Acessar a página de cadastro 2. Preencher nome (≥4 caracteres), e-mail válido, senha (≥6 caracteres) e confirmação de senha 3. Clicar em Cadastrar
-Resultado Esperado	Usuário é salvo no localStorage; sessão iniciada; redirecionamento para a Home
-Resultado Obtido	A preencher após execução
+ - [Plano de Testes de Software](#plano-de-testes-de-software)
+ - [Registro dos Testes de Software](#registro-dos-testes-de-software)
+ - [Avaliação dos Testes de Software](#avaliação-dos-testes-de-software)
+ - [Cenários de Teste de Usabilidade](#cenários-de-teste-de-usabilidade)
+ - [Registro dos Testes de Usabilidade](#registro-dos-testes-de-usabilidade)
+ - [Avaliação dos Testes de Usabilidade](#avaliação-dos-testes-de-usabilidade)
 
-Caso de Teste: CT-02
-Funcionalidade	Cadastro de Usuário — Nome inválido (RF-16)
-Tipo de Teste	Caixa Preta — Caso de Erro
-Pré-condição	Página de cadastro aberta
-Passos	1. Preencher nome com menos de 4 caracteres (ex.: 'Ana') 2. Preencher demais campos corretamente 3. Clicar em Cadastrar
-Resultado Esperado	Mensagem de erro exibida: 'O nome precisa ter pelo menos 4 caracteres'. Formulário não é submetido.
-Resultado Obtido	A preencher após execução
+# Teste de Software
 
-Caso de Teste: CT-03
-Funcionalidade	Cadastro de Usuário — E-mail inválido (RF-16)
-Tipo de Teste	Caixa Preta — Caso de Erro
-Pré-condição	Página de cadastro aberta
-Passos	1. Preencher e-mail sem '@' (ex.: 'emailinvalido.com') 2. Preencher demais campos corretamente 3. Clicar em Cadastrar
-Resultado Esperado	Mensagem de erro: 'Digite um e-mail válido'. Formulário não é submetido.
-Resultado Obtido	A preencher após execução
+Nesta seção o grupo deverá documentar os testes de software que verificam a correta implementação dos requisitos funcionais e não funcionais do software.
 
-Caso de Teste: CT-04
-Funcionalidade	Cadastro de Usuário — Senhas divergentes (RF-16)
-Tipo de Teste	Caixa Preta — Caso de Erro
-Pré-condição	Página de cadastro aberta
-Passos	1. Preencher campo 'Senha' com '123456' 2. Preencher campo 'Confirmar Senha' com '654321' 3. Clicar em Cadastrar
-Resultado Esperado	Mensagem de erro: 'As senhas não conferem'. Formulário não é submetido.
-Resultado Obtido	A preencher após execução
+## Plano de Testes de Software
 
-Caso de Teste: CT-05
-Funcionalidade	Cadastro de Usuário — E-mail duplicado (RF-16)
-Tipo de Teste	Caixa Preta — Caso de Borda
-Pré-condição	Usuário com e-mail 'joao@email.com' já cadastrado
-Passos	1. Tentar cadastrar novo usuário com o mesmo e-mail 2. Preencher demais campos corretamente 3. Clicar em Cadastrar
-Resultado Esperado	Mensagem de erro: 'Este e-mail já está cadastrado'. Novo cadastro não é criado.
-Resultado Obtido	A preencher após execução
+Preencha a tabela com o plano dos testes. Para cada Caso de Teste (CT), associe qual o Requisito Funcional ou não funcional que ele está verificando. Associe também a página (ou artefato) onde o teste será realizado e descreva o cenário do teste. Veja a tabela de exemplo.
 
-Caso de Teste: CT-06
-Funcionalidade	Login — Credenciais corretas (RF-01)
-Tipo de Teste	Caixa Preta — Caso Válido
-Pré-condição	Usuário cadastrado com e-mail 'joao@email.com' e senha '123456'
-Passos	1. Acessar a página de login 2. Informar e-mail e senha corretos 3. Clicar em Entrar
-Resultado Esperado	Sessão iniciada (token salvo no localStorage); redirecionamento para a Home
-Resultado Obtido	A preencher após execução
+---
 
-Caso de Teste: CT-07
-Funcionalidade	Login — Senha incorreta (RF-01)
-Tipo de Teste	Caixa Preta — Caso de Erro
-Pré-condição	Usuário cadastrado no sistema
-Passos	1. Informar e-mail correto e senha errada 2. Clicar em Entrar
-Resultado Esperado	Mensagem de erro: 'E-mail ou senha inválidos'. Sessão não é iniciada.
-Resultado Obtido	A preencher após execução
+### Grupo 1 — Cadastro e Login
 
-Caso de Teste: CT-08
-Funcionalidade	Registro de Ocorrência — Dados válidos (RF-04, RF-05, RF-06)
-Tipo de Teste	Caixa Preta — Caso Válido
-Pré-condição	Usuário autenticado na aplicação
-Passos	1. Acessar o formulário de nova ocorrência 2. Selecionar categoria (ex.: 'Roubo') 3. Informar CEP ou selecionar ponto no mapa 4. Preencher descrição (≥20 caracteres) 5. Submeter o formulário
-Resultado Esperado	Ocorrência salva no localStorage; marcador exibido no mapa na localização informada
-Resultado Obtido	A preencher após execução
+**Caso de Teste** | **CT01 - Cadastro de novo usuário**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a página `paginaCadastro/cadastre-se.html` <br> 2) Preencha o campo **Nome** com pelo menos 4 caracteres <br> 3) Preencha o campo **E-mail** com um endereço válido <br> 4) Preencha o campo **Senha** com pelo menos 6 caracteres e confirme <br> 5) Selecione uma **Pergunta de segurança** e preencha a resposta <br> 6) Clique no botão **Registrar**
+**Requisitos associados** | RF-01
+**Resultado esperado** | Usuário cadastrado com sucesso e redirecionado para a página Home
+**Dados de entrada** | Nome: "João Teste" · E-mail: "joao@teste.com" · Senha: "123456" · 
+**Resultado obtido** | Sucesso
 
-Caso de Teste: CT-09
-Funcionalidade	Registro de Ocorrência — Sem categoria (RF-05)
-Tipo de Teste	Caixa Preta — Caso de Erro
-Pré-condição	Usuário autenticado; formulário de ocorrência aberto
-Passos	1. Deixar o campo de categoria em branco 2. Preencher demais campos corretamente 3. Tentar submeter
-Resultado Esperado	Formulário não é submetido; campo obrigatório destacado visualmente
-Resultado Obtido	A preencher após execução
+**Caso de Teste** | **CT02 - Validação de campos no cadastro**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a página de cadastro <br> 2) Tente registrar com nome de 2 caracteres <br> 3) Tente registrar com senha de 4 caracteres <br> 4) Tente registrar com senhas diferentes nos dois campos
+**Requisitos associados** | RF-01, RF-16
+**Resultado esperado** | Mensagem de erro específica para cada campo inválido; cadastro não realizado
+**Dados de entrada** | Nome: "Jo" · Senha: "1234" · Confirmar: "5678"
+**Resultado obtido** | Sucesso
 
-Caso de Teste: CT-10
-Funcionalidade	Logout (RF-01)
-Tipo de Teste	Caixa Branca — Fluxo de sessão
-Pré-condição	Usuário autenticado
-Passos	1. Clicar no botão 'Sair' 2. Verificar localStorage
-Resultado Esperado	Chaves 'userLogado' e 'token' removidas do localStorage; redirecionamento para a página de login
-Resultado Obtido	A preencher após execução
+**Caso de Teste** | **CT03 - Login com credenciais válidas**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a página `pagina-login/login.html` <br> 2) Preencha o campo **E-mail** com um e-mail cadastrado <br> 3) Preencha o campo **Senha** com a senha correta <br> 4) Clique no botão **Entrar**
+**Requisitos associados** | RF-01
+**Resultado esperado** | Usuário autenticado e redirecionado para a página Home com saudação "Olá, [Nome]"
+**Dados de entrada** | E-mail: "joao@email.com" · Senha: "123456"
+**Resultado obtido** |Sucesso
 
- 
-Plano de Testes de Usabilidade
-O plano de testes de usabilidade identifica as operações que os usuários devem executar para avaliar se o sistema é fácil de usar. Conforme o material de apoio digital.gov, usabilidade mede com que facilidade o usuário consegue atingir seus objetivos ao usar o serviço. O teste é conduzido com um participante real: o avaliador solicita uma tarefa e apenas observa, sem dar dicas.
-
-Como conduzir o teste
-1. Selecione um participante que represente o público-alvo (morador, ≥18 anos, acesso básico à internet).
-2. Apresente o sistema sem explicar como ele funciona.
-3. Leia a tarefa em voz alta e peça ao participante que pense em voz alta enquanto executa.
-4. Não interfira. Apenas observe e anote dificuldades, erros e tempo gasto.
-5. Ao final, registre o resultado na coluna 'Resultado / Observações' de cada caso.
-
-Casos de Teste de Usabilidade
-
-Caso de Teste de Usabilidade: TU-01
-Objetivo	Verificar se o usuário consegue criar uma conta sem orientação
-Perfil do Participante	Morador, acima de 18 anos, familiarizado com uso de celular e e-mail
-Tarefa solicitada	'Você acabou de baixar o Bairro Seguro. Crie uma conta para começar a usar.'
-O que observar	O participante localiza o botão de cadastro? Entende quais campos são obrigatórios? Conclui sem ajuda? Comete erros? Em quais campos?
-Critério de sucesso	Cadastro concluído com sucesso em até 3 minutos, sem intervenção do avaliador
-Resultado / Observações	A preencher após a execução do teste.
-
-Caso de Teste de Usabilidade: TU-02
-Objetivo	Verificar se o fluxo de login é intuitivo
-Perfil do Participante	Morador já cadastrado no sistema
-Tarefa solicitada	'Você já tem uma conta. Faça login agora.'
-O que observar	O participante encontra a tela de login? Sabe onde digitar e-mail e senha? Identifica o botão de entrar?
-Critério de sucesso	Login realizado em até 1 minuto, sem erros e sem orientação
-Resultado / Observações	A preencher após a execução do teste.
-
-Caso de Teste de Usabilidade: TU-03
-Objetivo	Verificar se o usuário consegue registrar uma ocorrência no mapa
-Perfil do Participante	Morador autenticado, sem experiência prévia com o sistema
-Tarefa solicitada	'Você presenciou um roubo na sua rua. Registre essa ocorrência no aplicativo.'
-O que observar	O participante encontra o formulário? Consegue selecionar a categoria correta? Entende como informar a localização? Sabe como enviar?
-Critério de sucesso	Ocorrência registrada e marcador visível no mapa em até 4 minutos
-Resultado / Observações	A preencher após a execução do teste.
-
-Caso de Teste de Usabilidade: TU-04
-Objetivo	Verificar se o mapa é compreensível para o usuário
-Perfil do Participante	Morador autenticado, pode nunca ter usado mapas interativos
-Tarefa solicitada	'Verifique se há alguma ocorrência registrada perto da Praça da Liberdade.'
-O que observar	O participante entende como navegar no mapa? Consegue identificar os marcadores? Compreende o que cada ícone representa?
-Critério de sucesso	Participante localiza e descreve ao menos uma ocorrência no mapa em até 3 minutos
-Resultado / Observações	A preencher após a execução do teste.
-
-Caso de Teste de Usabilidade: TU-05
-Objetivo	Verificar se o usuário encontra e utiliza a área de perfil
-Perfil do Participante	Morador autenticado
-Tarefa solicitada	'Atualize seu número de telefone no seu perfil.'
-O que observar	O participante localiza a página de perfil? Sabe como editar o campo? Consegue salvar a alteração?
-Critério de sucesso	Telefone atualizado com sucesso em até 2 minutos, sem orientação do avaliador
-Resultado / Observações	A preencher após a execução do teste.
+**Caso de Teste** | **CT04 - Login com credenciais inválidas**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a página de login <br> 2) Preencha o e-mail correto e uma senha errada <br> 3) Clique no botão **Entrar**
+**Requisitos associados** | RF-01
+**Resultado esperado** | Mensagem de erro "E-mail ou senha inválidos." sem redirecionar o usuário
+**Dados de entrada** | E-mail: "joao@email.com" · Senha: "senhaerrada"
+**Resultado obtido** | Sucesso
 
 
 
+---
+
+### Grupo 2 — Página Home (Mapa e Ocorrências)
+
+**Caso de Teste** | **CT07 - Registrar ocorrência via clique no mapa**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a Home autenticado <br> 2) Clique em um ponto do mapa <br> 3) Aguarde o endereço e CEP serem preenchidos automaticamente <br> 4) Selecione o tipo e o nível de gravidade <br> 5) Clique em **Relatar no mapa**
+**Requisitos associados** | RF-03, RF-04, RF-05, RF-06
+**Resultado esperado** | CEP preenchido automaticamente, marcador exibido no mapa e card criado na lista de ocorrências
+**Dados de entrada** | Clique em ponto do mapa em BH · Tipo: "🚨 Assalto/roubo" · Gravidade: "🟠 Perigo"
+**Resultado obtido** | Sucesso
+
+**Caso de Teste** | **CT08 - Registrar ocorrência via busca por CEP**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a Home <br> 2) Digite um CEP válido e clique em **Buscar CEP** <br> 3) Selecione o tipo e a gravidade <br> 4) Clique em **Relatar no mapa**
+**Requisitos associados** | RF-03, RF-04, RF-05, RF-06
+**Resultado esperado** | Mapa centraliza no endereço encontrado, marcador adicionado e card exibido na lista
+**Dados de entrada** | CEP: "30130-010" · Tipo: "💡 Iluminação apagada" · Gravidade: "🟡 Atenção"
+**Resultado obtido** | Sucesso
+
+**Caso de Teste** | **CT09 - Buscar e filtrar ocorrências**
+ :--------------: | ------------
+**Procedimento**  | 1) Com pelo menos 3 ocorrências de tipos diferentes cadastradas <br> 2) Digite "assalto" no campo de busca <br> 3) Selecione um nível de gravidade no filtro
+**Requisitos associados** | RF-02, RF-13
+**Resultado esperado** | Apenas as ocorrências correspondentes ao termo e ao filtro aparecem na lista e no mapa
+**Dados de entrada** | Busca: "assalto" · Filtro: "🟠 Perigo"
+**Resultado obtido** | Sucesso
+
+**Caso de Teste** | **CT10 - Editar ocorrência própria**
+ :--------------: | ------------
+**Procedimento**  | 1) Com uma ocorrência do usuário logado na lista <br> 2) Clique no botão **Editar** no card <br> 3) Altere o tipo e a descrição no modal <br> 4) Clique em **Salvar alterações**
+**Requisitos associados** | RF-11
+**Resultado esperado** | Modal abre com dados pré-preenchidos; após salvar, card e marcador são atualizados imediatamente
+**Dados de entrada** | Novo tipo: "🔊 Som alto/barulho" · Nova descrição: "Festa com som alto no período noturno"
+**Resultado obtido** |Sucesso
+
+**Caso de Teste** | **CT11 - Remover ocorrência própria**
+ :--------------: | ------------
+**Procedimento**  | 1) Com uma ocorrência do usuário logado na lista <br> 2) Clique no botão **Remover** no card <br> 3) Confirme clicando em **OK**
+**Requisitos associados** | RF-12
+**Resultado esperado** | Ocorrência removida da lista e marcador removido do mapa
+**Dados de entrada** | Confirmação: "OK" na caixa de diálogo
+**Resultado obtido** | Sucesso
+
+
+
+---
+
+### Grupo 3 — Configurações
+
+**Caso de Teste** | **CT13 - Alternar tema claro/escuro**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse **Configurações** pela sidebar <br> 2) Ative o toggle **Tema claro/escuro** <br> 3) Observe a mudança visual <br> 4) Desative o toggle e observe o retorno ao tema escuro
+**Requisitos associados** | RNF-01
+**Resultado esperado** | Interface alterna imediatamente entre tema claro e escuro; configuração persiste ao navegar para outra página
+**Dados de entrada** | Toggle ativado e desativado
+**Resultado obtido** | A preencher
+
+**Caso de Teste** | **CT14 - Limpar ocorrências do usuário**
+ :--------------: | ------------
+**Procedimento**  | 1) Com ocorrências cadastradas pelo usuário logado <br> 2) Acesse Configurações <br> 3) Clique em **Limpar minhas ocorrências** e confirme
+**Requisitos associados** | RNF-02
+**Resultado esperado** | Apenas as ocorrências do usuário logado são removidas; ocorrências de outros usuários permanecem
+**Dados de entrada** | Confirmação: "OK"
+**Resultado obtido** | A preencher
+
+---
+
+### Grupo 4 — Perfil do Usuário
+
+**Caso de Teste** | **CT15 - Editar dados do perfil**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse **Perfil** pela sidebar <br> 2) Altere o nome e o telefone <br> 3) Clique em **Salvar alterações**
+**Requisitos associados** | RF-01
+**Resultado esperado** | Dados atualizados com sucesso; nome refletido na sidebar e mensagem "Perfil atualizado com sucesso!" exibida
+**Dados de entrada** | Nome: "João da Silva" · Telefone: "31988887777"
+**Resultado obtido** | A preencher
+
+**Caso de Teste** | **CT16 - Alterar senha pelo perfil**
+ :--------------: | ------------
+**Procedimento**  | 1) Acesse a página de perfil <br> 2) Preencha a senha atual, a nova senha e a confirmação <br> 3) Clique em **Salvar alterações** <br> 4) Faça logout e tente logar com a nova senha
+**Requisitos associados** | RF-01
+**Resultado esperado** | Senha alterada; acesso concedido com a nova senha após novo login
+**Dados de entrada** | Senha atual: "123456" · Nova senha: "novaSenha123"
+**Resultado obtido** | A preencher
+
+**Caso de Teste** | **CT17 - Visualizar ocorrências próprias no perfil**
+ :--------------: | ------------
+**Procedimento**  | 1) Com pelo menos 2 ocorrências cadastradas pelo usuário <br> 2) Acesse a página de perfil pela sidebar
+**Requisitos associados** | RF-02
+**Resultado esperado** | Lista exibe as ocorrências reportadas pelo usuário logado com tipo, endereço e data
+**Dados de entrada** | Usuário com 2 ocorrências registradas
+**Resultado obtido** | A preencher
+
+## Registro dos Testes de Software
+
+Esta seção deve apresentar o relatório com as evidências dos testes de software realizados no sistema pela equipe, baseado no plano de testes pré-definido. Documente cada caso de teste apresentando um vídeo ou animação que comprove o funcionamento da funcionalidade. Veja os exemplos a seguir.
+
+|*Caso de Teste*                                 |*CT01 - Cadastro de novo usuário*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT02 - Validação de campos no cadastro*                                         |
+|---|---|
+|Requisito Associado | RF-01, RF-16 - O sistema deve validar campos obrigatórios no cadastro|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT03 - Login com credenciais válidas*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT04 - Login com credenciais inválidas*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT05 - Recuperação de senha*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT06 - Bloqueio de acesso sem autenticação*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT07 - Registrar ocorrência via clique no mapa*                                         |
+|---|---|
+|Requisito Associado | RF-03, RF-04, RF-05, RF-06 - O sistema deve apresentar um mapa e permitir que o usuário crie uma publicação de ocorrência com localização e categoria|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT08 - Registrar ocorrência via busca por CEP*                                         |
+|---|---|
+|Requisito Associado | RF-03, RF-04, RF-05, RF-06 - O sistema deve apresentar um mapa e permitir que o usuário crie uma publicação de ocorrência com localização e categoria|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT09 - Buscar e filtrar ocorrências*                                         |
+|---|---|
+|Requisito Associado | RF-02, RF-13 - O sistema deve apresentar um feed com as postagens e permitir filtrar por categoria|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT10 - Editar ocorrência própria*                                         |
+|---|---|
+|Requisito Associado | RF-11 - O sistema deve permitir edição de posts pelo autor|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT11 - Remover ocorrência própria*                                         |
+|---|---|
+|Requisito Associado | RF-12 - O sistema deve permitir deleção de posts pelo autor|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT12 - Botão de emergência*                                         |
+|---|---|
+|Requisito Associado | RF-04, RF-05 - O sistema deve permitir que o usuário crie uma publicação de ocorrência e selecione uma categoria|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT13 - Alternar tema claro/escuro*                                         |
+|---|---|
+|Requisito Associado | RNF-01 - A interface deve ser limpa e responsiva|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT14 - Limpar ocorrências do usuário*                                         |
+|---|---|
+|Requisito Associado | RNF-02 - Os dados dos usuários devem ser armazenados no navegador|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT15 - Editar dados do perfil*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve permitir que os usuários gerenciem seu cadastro|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT16 - Alterar senha pelo perfil*                                         |
+|---|---|
+|Requisito Associado | RF-01 - O sistema deve permitir que os usuários gerenciem seu cadastro|
+|Link do vídeo do teste realizado: | A preencher |
+
+|*Caso de Teste*                                 |*CT17 - Visualizar ocorrências no perfil*                                         |
+|---|---|
+|Requisito Associado | RF-02 - O sistema deve apresentar um feed com as postagens|
+|Link do vídeo do teste realizado: | A preencher |
+
+## Avaliação dos Testes de Software
+
+Discorra sobre os resultados do teste. Ressaltando pontos fortes e fracos identificados na solução. Comente como o grupo pretende atacar esses pontos nas próximas iterações. Apresente as falhas detectadas e as melhorias geradas a partir dos resultados obtidos nos testes.
+
+> A preencher após execução dos testes.
+
+## Testes de unidade automatizados (Opcional)
+
+Se o grupo tiver interesse em se aprofundar no desenvolvimento de testes de software, ele poderá desenvolver testes automatizados de software que verificam o funcionamento das funções JavaScript desenvolvidas. Para conhecer sobre testes unitários em JavaScript, leia o documento  [Ferramentas de Teste para Java Script](https://geekflare.com/javascript-unit-testing/).
+
+# Testes de Usabilidade
+
+O objetivo do Plano de Testes de Usabilidade é obter informações quanto à expectativa dos usuários em relação à funcionalidade da aplicação de forma geral.
+
+Para tanto, elaboramos quatro cenários, cada um baseado na definição apresentada sobre as histórias dos usuários, definido na etapa das especificações do projeto.
+
+Foram convidadas quatro pessoas que os perfis se encaixassem nas definições das histórias apresentadas na documentação, visando averiguar os seguintes indicadores:
+
+Taxa de sucesso: responde se o usuário conseguiu ou não executar a tarefa proposta;
+
+Satisfação subjetiva: responde como o usuário avalia o sistema com relação à execução da tarefa proposta, conforme a seguinte escala:
+
+1. Péssimo; 
+2. Ruim; 
+3. Regular; 
+4. Bom; 
+5. Ótimo.
+
+Tempo para conclusão da tarefa: em segundos, e em comparação com o tempo utilizado quando um especialista (um desenvolvedor) realiza a mesma tarefa.
+
+Objetivando respeitar as diretrizes da Lei Geral de Proteção de Dados, as informações pessoais dos usuários que participaram do teste não foram coletadas, tendo em vista a ausência de Termo de Consentimento Livre e Esclarecido.
+
+Apresente os cenários de testes utilizados na realização dos testes de usabilidade da sua aplicação. Escolha cenários de testes que demonstrem as principais histórias de usuário sendo realizadas. Neste tópico o grupo deve detalhar quais funcionalidades avaliadas, o grupo de usuários que foi escolhido para participar do teste e as ferramentas utilizadas.
+
+> - [UX Tools](https://uxdesign.cc/ux-user-research-and-user-testing-tools-2d339d379dc7)
+
+## Cenários de Teste de Usabilidade
+
+| Nº do Cenário | Descrição do cenário |
+|---------------|----------------------|
+| 1             | Você é um morador que acabou de presenciar um assalto na sua rua. Cadastre-se no aplicativo e registre a ocorrência no mapa informando o local e o tipo. |
+| 2             | Você quer saber se há ocorrências de segurança registradas no seu bairro. Use a busca do aplicativo para encontrar ocorrências do tipo "Assalto/roubo". |
+| 3             | Você esqueceu sua senha e não consegue acessar o aplicativo. Recupere o acesso à sua conta utilizando a funcionalidade de recuperação de senha. |
+| 4             | Você mudou de endereço e quer atualizar seu bairro no perfil. Encontre a página de perfil e atualize suas informações cadastrais. |
+
+## Registro de Testes de Usabilidade
+
+Cenário 1: Você é um morador que acabou de presenciar um assalto na sua rua. Cadastre-se no aplicativo e registre a ocorrência no mapa informando o local e o tipo.
+
+| Usuário | Taxa de sucesso | Satisfação subjetiva | Tempo para conclusão do cenário |
+|---------|-----------------|----------------------|---------------------------------|
+| 1       |                 |                      |                                 |
+| 2       |                 |                      |                                 |
+| 3       |                 |                      |                                 |
+| 4       |                 |                      |                                 |
+|  |  |  |  |
+| **Média**     |            |                  |                                 |
+| **Tempo para conclusão pelo especialista** | SIM | 5 |  |
+
+    Comentários dos usuários: A preencher após a aplicação do teste.
+
+
+Cenário 2: Você quer saber se há ocorrências de segurança registradas no seu bairro. Use a busca do aplicativo para encontrar ocorrências do tipo "Assalto/roubo".
+
+| Usuário | Taxa de sucesso | Satisfação subjetiva | Tempo para conclusão do cenário |
+|---------|-----------------|----------------------|---------------------------------|
+| 1       |                 |                      |                                 |
+| 2       |                 |                      |                                 |
+| 3       |                 |                      |                                 |
+| 4       |                 |                      |                                 |
+|  |  |  |  |
+| **Média**     |            |                  |                                 |
+| **Tempo para conclusão pelo especialista** | SIM | 5 |  |
+
+    Comentários dos usuários: A preencher após a aplicação do teste.
+
+
+Cenário 3: Você esqueceu sua senha e não consegue acessar o aplicativo. Recupere o acesso à sua conta utilizando a funcionalidade de recuperação de senha.
+
+| Usuário | Taxa de sucesso | Satisfação subjetiva | Tempo para conclusão do cenário |
+|---------|-----------------|----------------------|---------------------------------|
+| 1       |                 |                      |                                 |
+| 2       |                 |                      |                                 |
+| 3       |                 |                      |                                 |
+| 4       |                 |                      |                                 |
+|  |  |  |  |
+| **Média**     |            |                  |                                 |
+| **Tempo para conclusão pelo especialista** | SIM | 5 |  |
+
+    Comentários dos usuários: A preencher após a aplicação do teste.
+
+
+Cenário 4: Você mudou de endereço e quer atualizar seu bairro no perfil. Encontre a página de perfil e atualize suas informações cadastrais.
+
+| Usuário | Taxa de sucesso | Satisfação subjetiva | Tempo para conclusão do cenário |
+|---------|-----------------|----------------------|---------------------------------|
+| 1       |                 |                      |                                 |
+| 2       |                 |                      |                                 |
+| 3       |                 |                      |                                 |
+| 4       |                 |                      |                                 |
+|  |  |  |  |
+| **Média**     |            |                  |                                 |
+| **Tempo para conclusão pelo especialista** | SIM | 5 |  |
+
+    Comentários dos usuários: A preencher após a aplicação do teste.
+
+## Avaliação dos Testes de Usabilidade
+
+Tomando como base os resultados obtidos, foi possível verificar que a aplicação web apresenta bons resultados quanto à taxa de sucesso na interação dos usuários, tendo em vista que os cenários propostos foram concluídos com sucesso.
+
+Além disso, a aplicação obteve também uma elevada satisfação subjetiva dos usuários no momento que realizavam os cenários propostos. Prova são as médias das avaliações em cada um dos cenários, que variou entre 4 (bom) e 5 (ótimo).
+
+Com relação ao tempo para conclusão de cada tarefa/cenário, notamos discrepância entre a média de tempo dos usuários e o tempo do especialista/desenvolvedor em todos os cenários. Tal discrepância, em certa medida, é esperada, tendo em vista que o desenvolvedor já tem prévio conhecimento de toda a interface da aplicação, do posicionamento dos elementos, lógica de organização das páginas, etc.
+
+Contudo, tendo em vista que a diferença foi relevante e, ainda, os comentários feitos por alguns usuários, entendemos haver oportunidades de melhoria na usabilidade da aplicação.
+
+> Complementar com análise detalhada após coleta de todos os dados dos testes.
