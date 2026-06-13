@@ -21,6 +21,7 @@
   const uploadArea   = $("uploadArea");
   const relatarBtn   = $("relatarBtn");
   const limparBtn    = $("limparBtn");
+  const emergenciaBtn= $("emergenciaBtn");
   const fbBusca      = $("feedbackBusca");
   const fbRelato     = $("feedbackRelato");
   const editModal    = $("editModal");
@@ -34,16 +35,20 @@
   let selLoc = null;
   let selMark = null;
   let midiaFiles = [];
+  let modoEmergencia = false;
   let ocorrencias = carregarPersistidas();
 
   // ── mapa ──────────────────────────────────────────────────────────────────
-  // Garantir que o container tem altura antes de inicializar o Leaflet
+  // Forçar altura explícita antes do Leaflet inicializar
   const mapEl = document.getElementById("map");
-  if (mapEl && mapEl.offsetHeight === 0) {
-    mapEl.style.height = "400px";
-  }
+  mapEl.style.width  = "100%";
+  mapEl.style.height = "460px";
 
-  const mapa = L.map("map", { zoomControl: true }).setView([-14.235, -51.9253], 4);
+  const mapa = L.map("map", {
+    zoomControl: true,
+    preferCanvas: false
+  }).setView([-14.235, -51.9253], 4);
+
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors"
@@ -55,11 +60,12 @@
 
   renderAll();
 
-  // Garantir que o Leaflet recalcula o tamanho após o layout com sidebar renderizar
-  requestAnimationFrame(function () {
-    mapa.invalidateSize();
-    setTimeout(function () { mapa.invalidateSize(); }, 300);
-  });
+  // Chamar invalidateSize em múltiplos momentos para garantir
+  // que o Leaflet recalcule após a sidebar terminar de renderizar
+  mapa.invalidateSize();
+  setTimeout(function () { mapa.invalidateSize(); }, 100);
+  setTimeout(function () { mapa.invalidateSize(); }, 500);
+  window.addEventListener("load", function () { mapa.invalidateSize(); });
 
   // ── listeners ─────────────────────────────────────────────────────────────
   buscaInput.addEventListener("input", renderAll);
@@ -67,6 +73,7 @@
   buscarCepBtn.addEventListener("click", buscarCep);
   relatarBtn.addEventListener("click", salvarOcorrencia);
   limparBtn.addEventListener("click", limparSel);
+  emergenciaBtn.addEventListener("click", ativarEmergencia);
 
   cepInput.addEventListener("input", function (e) {
     e.target.value = fmtCep(e.target.value);
@@ -187,8 +194,9 @@
       const denBtn   = !isAuthor
         ? '<button class="btn-card btn-den" data-id="' + o.id + '" title="Denunciar">⚑</button>' : "";
       return (
-        '<li class="ocard" data-id="' + o.id + '">'
+        '<li class="ocard' + (o.emergencia ? " ocard-emergencia" : "") + '" data-id="' + o.id + '">'
           + '<div class="card-top">'
+            + (o.emergencia ? '<span class="emerg-tag">🆘 EMERGÊNCIA</span>' : "")
             + '<span class="card-emoji">' + esc(o.emoji) + '</span>'
             + '<span class="card-cat">'   + esc(o.tipo)  + '</span>'
             + '<span class="badge grav ' + gravCls + '">' + gravLbl + '</span>'
@@ -336,6 +344,28 @@
   }
 
   // ── salvar ocorrência ──────────────────────────────────────────────────────
+  // ── emergência ─────────────────────────────────────────────────────────────
+  function ativarEmergencia() {
+    modoEmergencia = true;
+
+    // Pré-preencher formulário com padrões de emergência
+    emojiSel.value  = "🚨";
+    gravSel.value   = "perigo_extremo";
+
+    // Destacar o formulário visualmente
+    const formOc = document.querySelector(".form-occurrence");
+    if (formOc) formOc.classList.add("modo-emergencia");
+
+    // Alterar o botão Relatar para indicar emergência
+    relatarBtn.textContent = "🆘 Relatar EMERGÊNCIA";
+    relatarBtn.style.background = "linear-gradient(135deg,#9b1c1c,#dc2626)";
+
+    // Scroll até o formulário
+    document.querySelector(".actions").scrollIntoView({ behavior: "smooth", block: "start" });
+
+    setFbRelato("🆘 Modo emergência ativado! Selecione o local e clique em Relatar EMERGÊNCIA.", "error");
+  }
+
   function salvarOcorrencia() {
     if (!selLoc) {
       setFbRelato("⚠️ Selecione o local primeiro: clique no mapa ou busque um CEP.", "error");
@@ -360,9 +390,10 @@
       lat: +selLoc.lat,
       lng: +selLoc.lng,
       emoji,
-      tipo: tipoDeEmoji(emoji),
+      tipo: modoEmergencia ? "EMERGÊNCIA" : tipoDeEmoji(emoji),
       detalhes: det,
-      gravidade: gravSel.value || "atencao",
+      gravidade: modoEmergencia ? "perigo_extremo" : (gravSel.value || "atencao"),
+      emergencia: modoEmergencia,
       midias: midiaFiles.map(function (f) { return { nome: f.name, tipo: f.type }; }),
       origem: selLoc.origem,
       nomeAutor: user.nomeUser || "morador",
@@ -377,7 +408,11 @@
     renderAll();
     limparSel();
     midiaFiles = []; renderMidias();
-    setFbRelato("✅ Ocorrência salva e exibida no mapa!", "success");
+
+    const msg = modoEmergencia
+      ? "🆘 Emergência registrada no mapa!"
+      : "✅ Ocorrência salva e exibida no mapa!";
+    setFbRelato(msg, modoEmergencia ? "error" : "success");
   }
 
   function removerOc(id) {
@@ -456,6 +491,15 @@
     fbBusca.textContent = "";
     setLocInfo("📍 Nenhum local selecionado — clique no mapa ou busque um CEP abaixo", false);
     if (selMark) { selLayer.removeLayer(selMark); selMark = null; }
+
+    // Resetar modo emergência
+    if (modoEmergencia) {
+      modoEmergencia = false;
+      const formOc = document.querySelector(".form-occurrence");
+      if (formOc) formOc.classList.remove("modo-emergencia");
+      relatarBtn.textContent = "📌 Relatar no mapa";
+      relatarBtn.style.background = "";
+    }
   }
 
   function carregarPersistidas() {

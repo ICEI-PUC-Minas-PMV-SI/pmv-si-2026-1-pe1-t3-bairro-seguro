@@ -27,13 +27,19 @@
 
 /* ── Mapa ───────────────────────────────────────────────────────────── */
 .map-card {
-  position:relative; height:min(58vh,460px);
-  border-radius:18px; overflow:hidden;
-  border:2px solid rgba(255,255,255,0.08); background:#d8dfdf;
+  position:relative;
+  height:460px;
+  border-radius:18px;
+  border:2px solid rgba(255,255,255,0.08);
+  background:#d8dfdf;
 }
 #map {
-  position:absolute; inset:0;
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  width:100%;
+  height:100%;
   cursor:crosshair;
+  z-index:1;
 }
 .map-hint {
   position:absolute; left:12px; bottom:12px; z-index:500;
@@ -77,6 +83,22 @@
 .btn-com  { background:rgba(255,255,255,0.07); color:var(--muted); }
 .btn-card:hover { filter:brightness(1.25); }
 .empty-msg { color:var(--muted); text-align:center; padding:24px 0; font-size:14px; }
+
+/* Card de emergência */
+.ocard-emergencia {
+  border:2px solid rgba(220,38,38,0.7) !important;
+  background:rgba(70,8,8,0.75) !important;
+  animation:cardEmerg 2s ease-in-out infinite;
+}
+@keyframes cardEmerg {
+  0%,100% { box-shadow:0 0 0 0 rgba(220,38,38,0); }
+  50%     { box-shadow:0 0 0 6px rgba(220,38,38,0.25); }
+}
+.emerg-tag {
+  font-size:11px; font-weight:800; padding:2px 10px;
+  border-radius:999px; background:rgba(220,38,38,0.5);
+  color:#ffcece; letter-spacing:0.4px;
+}
 
 /* ── Comentários inline ─────────────────────────────────────────────── */
 .com-area { border-top:1px solid rgba(255,255,255,0.06); padding-top:10px; }
@@ -181,6 +203,86 @@
   font-size:1rem; font-weight:700; color:#fff; background:#7a4343;
   cursor:pointer;
 }
+
+/* ── Botão de emergência (fora do mapa, canto direito) ──────────────── */
+.emerg-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  margin-top: -44px; /* sobe para ficar "sobre" a borda inferior do mapa */
+  margin-right: 16px;
+  position: relative;
+  z-index: 10;
+  pointer-events: none; /* o wrapper não captura eventos */
+}
+.emerg-label-hint {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.btn-emergencia {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.3);
+  background: linear-gradient(135deg, #9b1c1c, #dc2626);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-shadow: 0 4px 20px rgba(220,38,38,0.7);
+  transition: transform .15s, box-shadow .15s;
+  padding: 0;
+  position: relative;
+  pointer-events: all; /* garante que o botão recebe cliques */
+}
+.btn-emergencia:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 28px rgba(220,38,38,0.9);
+}
+.btn-emergencia:active { transform: scale(0.96); }
+
+.emerg-icon { font-size: 1.5rem; line-height: 1; }
+.emerg-txt  { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; }
+
+.emerg-pulse {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 3px solid rgba(220,38,38,0.8);
+  animation: ringPulse 1.5s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes ringPulse {
+  0%   { transform: scale(1);    opacity: .9; }
+  100% { transform: scale(1.5);  opacity: 0;  }
+}
+
+/* Modo emergência — destaca o formulário inteiro */
+.form-occurrence.modo-emergencia {
+  border:2px solid rgba(220,38,38,0.6);
+  border-radius:14px; padding:14px;
+  background:rgba(80,8,8,0.35);
+  animation:emergBorder 2s ease-in-out infinite;
+}
+@keyframes emergBorder {
+  0%,100% { border-color:rgba(220,38,38,0.6); }
+  50%     { border-color:rgba(220,38,38,1); }
+}
+.form-occurrence.modo-emergencia .flabel { color:#fca5a5; }
+.emerg-label {
+  display:none; background:rgba(180,0,0,0.4);
+  border:1px solid rgba(220,38,38,0.5); border-radius:10px;
+  padding:10px 14px; color:#ffcece; font-size:13px;
+  font-weight:600; text-align:center;
+}
+.form-occurrence.modo-emergencia .emerg-label { display:block; }
 
 /* Feedback */
 .feedback { margin:0; min-height:20px; font-size:13px; color:var(--muted); }

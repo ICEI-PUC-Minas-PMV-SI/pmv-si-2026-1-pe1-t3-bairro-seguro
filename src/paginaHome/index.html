@@ -66,6 +66,16 @@
         <div class="map-hint">👆 Clique em qualquer ponto do mapa para selecionar o local da ocorrência</div>
       </section>
 
+      <!-- Botão de emergência — fora do mapa para não ser bloqueado pelo Leaflet -->
+      <div class="emerg-wrap">
+        <button type="button" id="emergenciaBtn" class="btn-emergencia" title="Acionar emergência">
+          <span class="emerg-pulse"></span>
+          <span class="emerg-icon">🆘</span>
+          <span class="emerg-txt">SOS</span>
+        </button>
+        <span class="emerg-label-hint">Emergência</span>
+      </div>
+
       <!-- Ocorrências -->
       <section class="occurrences">
         <div class="occurrences-title">Ocorrências registradas</div>
@@ -88,6 +98,11 @@
 
         <!-- Formulário de ocorrência (sempre visível) -->
         <div class="form-occurrence">
+
+          <!-- Label de modo emergência (aparece só quando ativado) -->
+          <div class="emerg-label">
+            🆘 MODO EMERGÊNCIA — Esta ocorrência será sinalizada como urgente no mapa
+          </div>
 
           <div class="form-2col">
             <div class="fgroup">
