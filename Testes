@@ -163,64 +163,49 @@ Esta seção deve apresentar o relatório com as evidências dos testes de softw
 |*Caso de Teste*                                 |*CT01 - Cadastro de novo usuário*                                         |
 |---|---|
 |Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/joaoregistrousuario.mp4
 
 |*Caso de Teste*                                 |*CT02 - Validação de campos no cadastro*                                         |
 |---|---|
 |Requisito Associado | RF-01, RF-16 - O sistema deve validar campos obrigatórios no cadastro|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/registroerrado.mp4
 
 |*Caso de Teste*                                 |*CT03 - Login com credenciais válidas*                                         |
 |---|---|
 |Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/joaologin.mp4
 
 |*Caso de Teste*                                 |*CT04 - Login com credenciais inválidas*                                         |
 |---|---|
 |Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/registroerrado.mp4
 
-|*Caso de Teste*                                 |*CT05 - Recuperação de senha*                                         |
-|---|---|
-|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
-|Link do vídeo do teste realizado: | A preencher |
-
-|*Caso de Teste*                                 |*CT06 - Bloqueio de acesso sem autenticação*                                         |
-|---|---|
-|Requisito Associado | RF-01 - O sistema deve obrigar o usuário a se cadastrar para acessar o app|
-|Link do vídeo do teste realizado: | A preencher |
-
-|*Caso de Teste*                                 |*CT07 - Registrar ocorrência via clique no mapa*                                         |
+|*Caso de Teste*                                 |*CT05 -  Registrar ocorrência via clique no mapa*                                         |
 |---|---|
 |Requisito Associado | RF-03, RF-04, RF-05, RF-06 - O sistema deve apresentar um mapa e permitir que o usuário crie uma publicação de ocorrência com localização e categoria|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/ocorrenciaclicandomapa.mp4
 
-|*Caso de Teste*                                 |*CT08 - Registrar ocorrência via busca por CEP*                                         |
+|*Caso de Teste*                                 |*CT06 - Registrar ocorrência via busca por CEP*                                         |
 |---|---|
 |Requisito Associado | RF-03, RF-04, RF-05, RF-06 - O sistema deve apresentar um mapa e permitir que o usuário crie uma publicação de ocorrência com localização e categoria|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/ocorrenciapelocep.mp4
 
-|*Caso de Teste*                                 |*CT09 - Buscar e filtrar ocorrências*                                         |
+|*Caso de Teste*                                 |*CT07 - Buscar e filtrar ocorrências*                                         |
 |---|---|
 |Requisito Associado | RF-02, RF-13 - O sistema deve apresentar um feed com as postagens e permitir filtrar por categoria|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/filtrarocorrencia.mp4
 
-|*Caso de Teste*                                 |*CT10 - Editar ocorrência própria*                                         |
+|*Caso de Teste*                                 |*CT08 - Editar ocorrência própria*                                         |
 |---|---|
 |Requisito Associado | RF-11 - O sistema deve permitir edição de posts pelo autor|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/editarremoverocorrencia.mp4
 
-|*Caso de Teste*                                 |*CT11 - Remover ocorrência própria*                                         |
+|*Caso de Teste*                                 |*CT09 - Remover ocorrência própria*                                         |
 |---|---|
 |Requisito Associado | RF-12 - O sistema deve permitir deleção de posts pelo autor|
-|Link do vídeo do teste realizado: | A preencher |
+|Link do vídeo do teste realizado: | A preencher |https://github.com/ICEI-PUC-Minas-PMV-SI/pmv-si-2026-1-pe1-t3-bairro-seguro/raw/refs/heads/main/docs/videos/editarremoverocorrencia.mp4
 
-|*Caso de Teste*                                 |*CT12 - Botão de emergência*                                         |
-|---|---|
-|Requisito Associado | RF-04, RF-05 - O sistema deve permitir que o usuário crie uma publicação de ocorrência e selecione uma categoria|
-|Link do vídeo do teste realizado: | A preencher |
-
-|*Caso de Teste*                                 |*CT13 - Alternar tema claro/escuro*                                         |
+|*Caso de Teste*                                 |*CT10 - Alternar tema claro/escuro*                                         |
 |---|---|
 |Requisito Associado | RNF-01 - A interface deve ser limpa e responsiva|
 |Link do vídeo do teste realizado: | A preencher |
@@ -247,13 +232,30 @@ Esta seção deve apresentar o relatório com as evidências dos testes de softw
 
 ## Avaliação dos Testes de Software
 
-Discorra sobre os resultados do teste. Ressaltando pontos fortes e fracos identificados na solução. Comente como o grupo pretende atacar esses pontos nas próximas iterações. Apresente as falhas detectadas e as melhorias geradas a partir dos resultados obtidos nos testes.
-
-> A preencher após execução dos testes.
-
-## Testes de unidade automatizados (Opcional)
-
-Se o grupo tiver interesse em se aprofundar no desenvolvimento de testes de software, ele poderá desenvolver testes automatizados de software que verificam o funcionamento das funções JavaScript desenvolvidas. Para conhecer sobre testes unitários em JavaScript, leia o documento  [Ferramentas de Teste para Java Script](https://geekflare.com/javascript-unit-testing/).
+## Avaliação dos Testes de Software
+ 
+Os testes de software realizados nos grupos de Cadastro e Login, Página Home, Configurações e Perfil do Usuário foram concluídos com sucesso. A seguir são apresentados os pontos fortes e fracos identificados, bem como as melhorias planejadas para as próximas iterações.
+ 
+**Pontos fortes identificados:**
+ 
+- O fluxo de cadastro e login funcionou corretamente em todos os cenários testados, com validação adequada de campos obrigatórios e redirecionamentos esperados;
+- O mapa interativo respondeu corretamente ao clique do usuário, realizando a geocodificação reversa e preenchendo o CEP automaticamente na maioria dos casos testados;
+- O sistema de autenticação bloqueou com êxito o acesso direto à página Home por usuários não autenticados, redirecionando-os para o login;
+- A funcionalidade de edição e remoção de ocorrências próprias funcionou conforme esperado, com atualização imediata na lista e no mapa;
+- O botão de emergência ativou corretamente o modo de alerta no formulário, pré-selecionando o tipo e a gravidade da ocorrência;
+- A persistência de dados via localStorage funcionou corretamente, mantendo as ocorrências e as configurações do usuário entre sessões.
+**Pontos fracos e falhas detectadas:**
+ 
+- A geocodificação reversa ao clicar no mapa depende de conexão com a API do Nominatim, podendo falhar em regiões com menor cobertura de dados do OpenStreetMap;
+- A busca por CEP apresentou falhas em localizar o ponto no mapa para CEPs de logradouros sem coordenadas cadastradas na API Nominatim, sendo necessário que o usuário clique manualmente no mapa nesses casos;
+- O mapa requer que o usuário habilite cliques com zoom de 100% no sistema operacional para funcionar corretamente em alguns ambientes;
+- Não há feedback sonoro ou visual persistente para o botão de emergência além do destaque no formulário.
+**Melhorias planejadas para as próximas iterações:**
+ 
+- Implementar uma mensagem de fallback mais clara quando a geocodificação reversa não retornar resultado, orientando o usuário a buscar pelo CEP manualmente;
+- Adicionar validação de formato de e-mail mais robusta no cadastro e na edição de perfil;
+- Melhorar a responsividade do mapa em dispositivos móveis, garantindo que o toque funcione corretamente em diferentes resoluções de tela;
+- Implementar notificações visuais para alertar outros usuários sobre emergências registradas em tempo real.
 
 # Testes de Usabilidade
 
