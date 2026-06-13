@@ -66,7 +66,7 @@ Preencha a tabela com o plano dos testes. Para cada Caso de Teste (CT), associe 
 
 ### Grupo 2 — Página Home (Mapa e Ocorrências)
 
-**Caso de Teste** | **CT07 - Registrar ocorrência via clique no mapa**
+**Caso de Teste** | **CT04 - Registrar ocorrência via clique no mapa**
  :--------------: | ------------
 **Procedimento**  | 1) Acesse a Home autenticado <br> 2) Clique em um ponto do mapa <br> 3) Aguarde o endereço e CEP serem preenchidos automaticamente <br> 4) Selecione o tipo e o nível de gravidade <br> 5) Clique em **Relatar no mapa**
 **Requisitos associados** | RF-03, RF-04, RF-05, RF-06
@@ -74,7 +74,7 @@ Preencha a tabela com o plano dos testes. Para cada Caso de Teste (CT), associe 
 **Dados de entrada** | Clique em ponto do mapa em BH · Tipo: "🚨 Assalto/roubo" · Gravidade: "🟠 Perigo"
 **Resultado obtido** | Sucesso
 
-**Caso de Teste** | **CT08 - Registrar ocorrência via busca por CEP**
+**Caso de Teste** | **CT05 - Registrar ocorrência via busca por CEP**
  :--------------: | ------------
 **Procedimento**  | 1) Acesse a Home <br> 2) Digite um CEP válido e clique em **Buscar CEP** <br> 3) Selecione o tipo e a gravidade <br> 4) Clique em **Relatar no mapa**
 **Requisitos associados** | RF-03, RF-04, RF-05, RF-06
@@ -82,7 +82,7 @@ Preencha a tabela com o plano dos testes. Para cada Caso de Teste (CT), associe 
 **Dados de entrada** | CEP: "30130-010" · Tipo: "💡 Iluminação apagada" · Gravidade: "🟡 Atenção"
 **Resultado obtido** | Sucesso
 
-**Caso de Teste** | **CT09 - Buscar e filtrar ocorrências**
+**Caso de Teste** | **CT06 - Buscar e filtrar ocorrências**
  :--------------: | ------------
 **Procedimento**  | 1) Com pelo menos 3 ocorrências de tipos diferentes cadastradas <br> 2) Digite "assalto" no campo de busca <br> 3) Selecione um nível de gravidade no filtro
 **Requisitos associados** | RF-02, RF-13
@@ -90,7 +90,7 @@ Preencha a tabela com o plano dos testes. Para cada Caso de Teste (CT), associe 
 **Dados de entrada** | Busca: "assalto" · Filtro: "🟠 Perigo"
 **Resultado obtido** | Sucesso
 
-**Caso de Teste** | **CT10 - Editar ocorrência própria**
+**Caso de Teste** | **CT07 - Editar ocorrência própria**
  :--------------: | ------------
 **Procedimento**  | 1) Com uma ocorrência do usuário logado na lista <br> 2) Clique no botão **Editar** no card <br> 3) Altere o tipo e a descrição no modal <br> 4) Clique em **Salvar alterações**
 **Requisitos associados** | RF-11
@@ -98,7 +98,7 @@ Preencha a tabela com o plano dos testes. Para cada Caso de Teste (CT), associe 
 **Dados de entrada** | Novo tipo: "🔊 Som alto/barulho" · Nova descrição: "Festa com som alto no período noturno"
 **Resultado obtido** |Sucesso
 
-**Caso de Teste** | **CT11 - Remover ocorrência própria**
+**Caso de Teste** | **CT08 - Remover ocorrência própria**
  :--------------: | ------------
 **Procedimento**  | 1) Com uma ocorrência do usuário logado na lista <br> 2) Clique no botão **Remover** no card <br> 3) Confirme clicando em **OK**
 **Requisitos associados** | RF-12
